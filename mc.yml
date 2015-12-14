@@ -1,0 +1,21 @@
+---
+- hosts: testservers
+  remote_user: root
+
+  tasks:
+  - name: install mc
+    apt:
+      name=mc
+      state=latest 
+
+  - name: create config dir
+    file:
+      dest=~/.config/mc
+      state=directory
+
+  - name: use preconfigured settings
+  - tags: mc_config
+    copy:
+      src=resources/mc/ini
+      dest=~/.config/mc/ini
+

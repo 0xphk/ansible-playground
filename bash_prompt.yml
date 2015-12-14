@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  remote_user: root
+  vars:
+    fqdn_host: toni2.test.io
+
+  tasks:
+  - name: add custom bash prompt
+    lineinfile: 
+      dest=~/.bashrc
+      regexp="^PS1='\[\w+]"
+      line="PS1='[test] \[\033[1;31m\]\u\[\033[0;0m\]@{{ fqdn_host }}:\w\$ '"
+      state=present
+      backrefs=yes
+      # insertafter='^PS1'

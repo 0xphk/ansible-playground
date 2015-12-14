@@ -1,0 +1,30 @@
+---
+- hosts: testservers
+  remote_user: root
+
+  tasks:
+
+#  - name: change sshd settings
+#    lineinfile: dest=/etc/ssh/sshd_config
+#                regexp='^PermitRootLogin'
+#                line='PermitRootLogin yes'
+#                state=present
+
+  - name: add bcs deb repository
+    tags: add_bcs_repo
+    template: src=resources/bcs/debian-bcs-net.list dest=/etc/apt/sources.list.d/debian-bcs-net.list
+
+  - name: add repository pubkey 
+    tags: add_bcs_pubkey
+    shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey && apt update
+
+  - name: install bcs base packages
+    tags: bcs_base_packages
+    action: apt pkg={{item}} state=latest 
+    with_items:
+      - debian-bcs
+      - bcs-ca-certificates
+      - bcs-root-sshkeys
+      - atop
+      - atop-nolog
+

@@ -1,0 +1,21 @@
+---
+- hosts: testservers
+  remote_user: root
+
+  tasks:
+  - name: install byobu
+  - tags: byobu_latest
+    apt: 
+      name=byobu
+      state=latest 
+
+  - name: create settings dir
+    file:
+      dest=~/.byobu 
+      state=directory 
+
+  - name: use preconfigured settings
+  - tags: byobu_config
+    unarchive: 
+      src=resources/byobu/byobu.tgz
+      dest=~/

@@ -1,0 +1,28 @@
+---
+- hosts: testservers
+  remote_user: root
+
+  tasks:
+
+  - name: create root ssh folder
+    file:
+      dest=~/.ssh
+      mode=700
+      owner=root
+      group=root
+
+  - name: copy ssh user_keys
+    template:
+      src=resources/ssh/user_keys
+      dest=~/.ssh/authorized_keys
+      mode=600
+      owner=root
+      group=root
+
+  - name: copy ssh root_keys
+    template:
+      src=resources/ssh/root_keys
+      dest=~/.ssh/authorized_keys2
+      mode=600
+      owner=root
+      group=root

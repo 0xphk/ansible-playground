@@ -1,0 +1,43 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  tasks:
+
+  - name: install base packages
+    tags: base_packages
+    action: apt pkg={{ item }} state=latest 
+    with_items:
+      - htop
+      - atop
+      - multitail
+      - molly-guard
+      - byobu
+      - mc
+      - lsof
+      - git
+
+  - name: create config dirs
+    tags: 
+      - mc_config
+      - byobu_config
+
+    file: dest={{ item }} state=directory
+    with_items:
+      - ~/.config/mc
+      - ~/.byobu
+
+  - name: use preconfigured mc config
+    tags: mc_config
+    copy:
+      src=resources/mc/ini
+      dest=~/.config/mc/ini
+      mode=640
+      owner=root
+      group=root
+
+  - name: use preconfigured byobu config
+    tags: byobu_config
+    unarchive: 
+      src=resources/byobu/byobu.tgz
+      dest=~/
