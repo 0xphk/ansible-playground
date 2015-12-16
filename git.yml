@@ -1,0 +1,27 @@
+---
+- hosts: localhost
+  remote_user: root
+  vars:
+    git_username: test
+    git_useremail: user@email.tld
+    git_projectpath: ~/gitinit
+    git_projectname: gitinit.git
+    git_remoteuser: test
+    git_remote: git@github.com/{{ git_remoteuser }}/{{ git_projectname }}
+
+  tasks:
+
+  - stat: path={{ git_projectpath }}/.git
+    register: return
+
+  - name: init git_repository
+    tags: git_init
+    command: git init {{ git_projectpath }}
+    when: return.stat.isdir is not defined
+
+  - name: use preconfigured git_config
+    tags: git_config
+    template:
+      src=resources/git/config
+      dest={{ git_projectpath }}/.git/config
+    when: return.stat.isdir is defined
