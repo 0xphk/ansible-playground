@@ -1,12 +1,14 @@
 ---
-- hosts: localhost
+- hosts:
+#    - localhost
+    - test
   remote_user: root
 
   tasks:
 
   - name: install base packages
     tags: base_packages
-    action: apt pkg={{ item }} state=latest 
+    action: apt pkg={{ item }} state=latest
     with_items:
       - htop
       - atop
@@ -18,7 +20,7 @@
       - git
 
   - name: create config dirs
-    tags: 
+    tags:
       - mc_config
       - byobu_config
 
