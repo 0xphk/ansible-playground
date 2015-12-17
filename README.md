@@ -32,3 +32,7 @@
 ###### install ansible as python package
 
 `pip install ansible`
+
+###### fix for ssh mux_client_request_session error
+
+ssh_args = -o ControlMaster=no
