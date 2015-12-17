@@ -33,6 +33,6 @@
 
 `pip install ansible`
 
-###### fix for ssh mux_client_request_session error
+###### fix ssh mux_client_request_session error
 
-ssh_args = -o ControlMaster=no
+add `ssh_args = -o ControlMaster=no` to ssh_connection section in ansible.cfg
