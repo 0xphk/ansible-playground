@@ -21,13 +21,9 @@
 * openssl-devel
 * libyaml
 
-###### install dependencies
+###### install dependencies using easy_install-2.7
 
-`easy_install-2.7 PyYAML`
-
-`easy_install-2.7 Jinja2`
-
-`easy_install-2.7 pip`
+`PyYAML, Jinja2, pip`
 
 ###### install ansible as python package
 
