@@ -23,7 +23,10 @@
 
 ###### install dependencies
 
-``easy_install-2.7 PyYAML``
-``easy_install-2.7 Jinja2``
-``easy_install-2.7 pip``
-``pip install ansible``
+`easy_install-2.7 PyYAML`
+`easy_install-2.7 Jinja2`
+`easy_install-2.7 pip`
+
+###### install ansible as python package
+
+`pip install ansible`
