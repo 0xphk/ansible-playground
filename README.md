@@ -35,4 +35,4 @@
 
 ###### fix ssh mux_client_request_session error
 
-add `ssh_args = -o ControlMaster=no` to ssh_connection section in ansible.cfg
+add `ssh_args = -o ControlMaster=no` to [ssh_connection] in ansible.cfg
