@@ -4,12 +4,6 @@
 
   tasks:
 
-#  - name: change sshd settings
-#    lineinfile: dest=/etc/ssh/sshd_config
-#                regexp='^PermitRootLogin'
-#                line='PermitRootLogin yes'
-#                state=present
-
   - name: add bcs deb repository
     tags: add_bcs_repo
     template: src=resources/bcs/debian-bcs-net.list dest=/etc/apt/sources.list.d/debian-bcs-net.list
