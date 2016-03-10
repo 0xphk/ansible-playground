@@ -1,5 +1,8 @@
 ---
-- hosts: testservers
+- hosts: 
+    - localhost
+#    - testservers
+#    - test
   remote_user: root
 
   tasks:
@@ -12,6 +15,7 @@
       group=root
 
   - name: copy ssh user_keys
+    tags: user_keys
     template:
       src=resources/ssh/user_keys
       dest=~/.ssh/authorized_keys
@@ -19,7 +23,17 @@
       owner=root
       group=root
 
+  - name: copy ssh user_keys_priv
+    tags: user_keys_priv
+    template:
+      src=resources/ssh/user_keys_priv
+      dest=~/.ssh/authorized_keys
+      mode=600
+      owner=root
+      group=root
+
   - name: copy ssh root_keys
+    tags: root_keys
     template:
       src=resources/ssh/root_keys
       dest=~/.ssh/authorized_keys2

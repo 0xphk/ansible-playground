@@ -1,0 +1,55 @@
+---
+- hosts: 
+  - localhost
+  #- etcsic
+
+  remote_user: root
+
+  vars:
+    git_url: git@development.bcs.bcs
+    git_repo: etcsic
+    git_origin: {{ git_url }}:{{ git_repo }}/{{ ansible_fqdn }}/.git
+
+  tasks:
+
+  - stat: path=/etc/.git
+    register: return
+
+  - name: use preconfigured git_config
+    tags: git_origin
+    template:
+      src=resources/etcsic/config
+      dest=/etc/.git/config
+    when: return.stat.isdir is defined
+
+- hosts: 
+  - localhost
+  #- etcsic_legacy
+
+  remote_user: root
+
+  vars:
+    git_url: git@development.bcs.bcs
+    git_repo: etcsic
+    git_origin: {{ git_url }}:{{ git_repo }}/{{ ansible_fqdn }}/.git
+
+  tasks:
+
+  - stat: path=/etc/.git
+    register: return_legacy
+
+  - name: use preconfigured git_config for legacy systems
+    tags: git_origin_legacy
+    template:
+      src=resources/etcsic/config_legacy
+      dest=/etc/.git/config
+    when: return_legacy.stat.isdir is defined
+    
+#  - name: add remote origin to config
+#    lineinfile: 
+#      dest=/etc/.git/config
+#      regexp="^logallrefudates"
+#      line="PS1='[test] \[\033[1;31m\]\u\[\033[0;0m\]@{{ fqdn_host }}:\w\$ '"
+#      state=present
+#      backrefs=yes
+      # insertafter='^PS1'

@@ -27,4 +27,4 @@
       - bcs-root-sshkeys
       - atop
       - atop-nolog
-
+      - etcsic

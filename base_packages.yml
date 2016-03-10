@@ -1,7 +1,7 @@
 ---
 - hosts:
-#    - localhost
-    - test
+    - localhost
+#    - test
   remote_user: root
 
   tasks:
@@ -10,6 +10,7 @@
     tags: base_packages
     action: apt pkg={{ item }} state=latest
     with_items:
+      - parted
       - htop
       - atop
       - multitail

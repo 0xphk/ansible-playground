@@ -3,14 +3,8 @@
 	filemode = true
 	bare = false
 	logallrefupdates = true
-	editor = nano
-[user]
-	name = {{ git_username }}
-	email = {{ git_useremail }}
-[alias]
-	logp = log -p
 [push]
 	default = matching
 [remote "origin"]
-	url = {{ git_remote }}
+	url = {{ git_origin }}
 	fetch = +refs/heads/*:refs/remotes/origin/*
