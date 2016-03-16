@@ -14,6 +14,7 @@
 * python-openssl
 * python-setuptools
 * python-yaml
+* python-simplejson (node)
 * git (2.5.x)
 * nano (prefered)
 * openssh

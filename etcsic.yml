@@ -14,15 +14,18 @@
   tasks:
 
   - name: ensure latest etcsic version
-    tags: git_origin
-    apt: update_cache=yes name=etcsic state=latest
+    tags: etcsic_bcs
+    apt: 
+      update_cache=yes 
+      name=etcsic 
+      state=latest
 
   - stat: path=/etc/.git
-    tags: git_origin
+    tags: etcsic_bcs
     register: return
 
   - name: use preconfigured git_config
-    tags: git_origin
+    tags: etcsic_bcs
     template:
       src=resources/etcsic/config
       dest=/etc/.git/config
@@ -32,7 +35,7 @@
 
   - etcsic_legacy
 
-  gather_facts: True
+  gather_facts: true
   remote_user: root
 
   vars:
@@ -43,20 +46,87 @@
   tasks:
 
   - name: ensure latest etcsic version
-    tags: git_origin_legacy
-    apt: update_cache=yes name=etcsic state=latest
+    tags: etcsic_legacy
+    apt: 
+      update_cache=yes 
+      name=etcsic 
+      state=latest
 
   - stat: path=/etc/.git
-    tags: git_origin_legacy
+    tags: etcsic_legacy
     register: return_legacy
 
   - name: use preconfigured git_config for legacy systems
-    tags: git_origin_legacy
+    tags: etcsic_legacy
     template:
       src=resources/etcsic/config_legacy
       dest=/etc/.git/config
     when: return_legacy.stat.isdir is defined
     
+- hosts: 
+
+  - etcsic_delta
+
+  gather_facts: false
+  remote_user: root
+
+  vars:
+    git_url: git@development.bcs.bcs
+    git_repo: etcsic_delta
+    git_origin: "{{ git_url }}:{{ git_repo }}/{{ ansible_fqdn }}/.git"
+
+  tasks:
+
+  - name: ensure latest etcsic version
+    tags: etcsic_delta
+    apt: 
+      update_cache=yes 
+      name=etcsic 
+      state=latest
+
+  - stat: path=/etc/.git
+    tags: etcsic_delta
+    register: return
+
+  - name: use preconfigured git_config
+    tags: etcsic_delta
+    template:
+      src=resources/etcsic/config
+      dest=/etc/.git/config
+    when: return.stat.isdir is defined
+
+- hosts: 
+
+  - etcsic_agrar
+
+  gather_facts: false
+  remote_user: root
+
+  vars:
+    git_url: git@development.bcs.bcs
+    git_repo: etcsic_agrar
+    git_origin: "{{ git_url }}:{{ git_repo }}/{{ ansible_fqdn }}/.git"
+
+  tasks:
+
+  - name: ensure latest etcsic version
+    tags: etcsic_agrar
+    apt: 
+      update_cache=yes 
+      name=etcsic 
+      state=latest
+
+  - stat: path=/etc/.git
+    tags: etcsic_agrar
+    register: return
+
+  - name: use preconfigured git_config
+    tags: etcsic_agrar
+    template:
+      src=resources/etcsic/config
+      dest=/etc/.git/config
+    when: return.stat.isdir is defined
+
 #  - name: add remote origin to config
 #    lineinfile: 
 #      dest=/etc/.git/config

@@ -3,7 +3,9 @@
     - localhost
 #   - testservers
 #   - test
+
   remote_user: root
+  gather_facts: false
 
   tasks:
 
@@ -46,6 +48,7 @@
     - git
 
   remote_user: root
+  gather_facts: false
 
   tasks:
 

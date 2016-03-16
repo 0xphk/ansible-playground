@@ -5,6 +5,7 @@
     fqdn_host: toni2.test.io
 
   tasks:
+
   - name: add custom bash prompt
     lineinfile: 
       dest=~/.bashrc

@@ -5,16 +5,16 @@
   tasks:
 
   - name: add bcs deb repository
-    tags: add_bcs_repo
+    tags: bcs_repo
     template: src=resources/bcs/debian-bcs-net.list dest=/etc/apt/sources.list.d/debian-bcs-net.list
 
   - name: add repository pubkey 
-    tags: add_bcs_pubkey
+    tags: bcs_repokey
     shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey && apt update
 
   - name: install bcs base packages
     tags: bcs_base_packages
-    action: apt pkg={{item}} state=latest 
+    action: apt pkg={{ item }} state=latest 
     with_items:
       - debian-bcs
       - bcs-ca-certificates

@@ -14,7 +14,7 @@
       state=directory
 
   - name: use preconfigured settings
-  - tags: mc_config
+    tags: mc_config
     copy:
       src=resources/mc/ini
       dest=~/.config/mc/ini

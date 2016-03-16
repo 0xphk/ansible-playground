@@ -1,0 +1,37 @@
+---
+- hosts: 
+
+  - localhost
+  #- etcsic_remote
+
+  gather_facts: false
+  remote_user: root
+
+  vars:
+    path: /media/development/git/etcsic
+    contents: "{{ lookup('file', 'inventory/etcsic_remote') }}"
+
+  tasks:
+
+  - debug: msg="{{ contents }}"
+
+#  - name: create remote git folders
+#    tags: git_folder
+#    file: path="{{ path }}/{{ contents }}/"
+#          state=directory
+#          mode: 750
+#          owner: git
+#          group: git
+
+#  - stat: path=/etc/.git
+#    tags: git_folder
+#    register: return
+
+#  - name: use bare git repo
+#    tags: 
+#      - git_folder
+#      - git_bare
+#    unarchive:
+#      src=resources/git/git_bare.tgz
+#      dest="/media/development/git/etcsic/{{ ansible_fqdn }}/
+#    when return.stat.isdir is not defined

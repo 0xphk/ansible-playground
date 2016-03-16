@@ -3,8 +3,9 @@
   remote_user: root
 
   tasks:
+
   - name: install byobu
-  - tags: byobu_latest
+    tags: byobu_pkg
     apt: 
       name=byobu
       state=latest 
@@ -15,7 +16,7 @@
       state=directory 
 
   - name: use preconfigured settings
-  - tags: byobu_config
+    tags: byobu_config
     unarchive: 
       src=resources/byobu/byobu.tgz
       dest=~/

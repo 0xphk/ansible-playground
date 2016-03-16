@@ -12,5 +12,5 @@
 [push]
 	default = matching
 [remote "origin"]
-	url = {{ git_remote }}
+	url = {{ git_origin }}
 	fetch = +refs/heads/*:refs/remotes/origin/*

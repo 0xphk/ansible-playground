@@ -7,7 +7,7 @@
     git_projectpath: ~/gitinit
     git_projectname: gitinit.git
     git_remoteuser: test
-    git_remote: git@github.com/{{ git_remoteuser }}/{{ git_projectname }}
+    git_origin: git@github.com/{{ git_remoteuser }}/{{ git_projectname }}
 
   tasks:
 
