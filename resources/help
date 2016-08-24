@@ -1,0 +1,5 @@
+using specific inventory file for testing, using local connection, running specific tag only
+ansible-playbook -i inventory/hosts -c local playbook.yml --tag "tag" -v
+
+custom inventory file, specified tag, verbose-level=2, limit to last unsuccessful run
+ansible-playbook -i inventory/remote etcsic.yml --tag etcsic_bcs -vv --limit @/root/etcsic.retry
