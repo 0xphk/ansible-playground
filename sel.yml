@@ -1,5 +1,5 @@
 ---
-- hosts: localhost #hwservers
+- hosts: hwservers
   remote_user: root
 
   tasks:
@@ -19,11 +19,18 @@
       owner=root
       group=root
 
+  - name: remove old file
+    tags: sel_deploy
+    file:
+      dest=~/ipmi_sel/sel.sh
+      state=absent
+
   - name: deploy script
     tags: sel_deploy
     copy: 
       src=resources/sel/check_sel.sh
       dest=~/ipmi_sel/check_sel.sh
+      mode=750
 
   - name: deploy cronjob
     tags: sel_deploy
