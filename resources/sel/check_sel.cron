@@ -1,0 +1,7 @@
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+### check whether sel is full or not
+
+# m h dom mon dow user  command
+#0 22 1 * * root /root/ipmi_sel/check_sel.sh >/dev/null 2>&1

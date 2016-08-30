@@ -1,0 +1,32 @@
+---
+- hosts: localhost #hwservers
+  remote_user: root
+
+  tasks:
+
+  - name: install/update ipmitool
+    tags: ipmitool_pkg
+    apt: 
+      name=ipmitool
+      state=latest 
+
+  - name: create dir
+    tags: sel_deploy
+    file:
+      dest=~/ipmi_sel 
+      state=directory
+      mode=750
+      owner=root
+      group=root
+
+  - name: deploy script
+    tags: sel_deploy
+    copy: 
+      src=resources/sel/check_sel.sh
+      dest=~/ipmi_sel/check_sel.sh
+
+  - name: deploy cronjob
+    tags: sel_deploy
+    copy:
+      src=resources/sel/check_sel.cron
+      dest=/etc/cron.d/check_sel
