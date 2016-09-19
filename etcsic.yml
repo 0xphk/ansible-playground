@@ -14,9 +14,9 @@
   tasks:
 
   - name: ensure latest etcsic version
-    #tags: etcsic_bcs
+    tags: etcsic_bcs
     apt: 
-      update_cache=yes 
+      update_cache=no 
       name=etcsic 
       state=latest
 
