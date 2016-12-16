@@ -1,15 +1,32 @@
 ---
 - hosts:
-    - localhost
+     - etcsic_bcs
+     - etcsic_delta
+     - etcsic_agrar
+     - hetzner
+     - hwservers
+
+#    - localhost
 #    - test
+
+  gather_facts: false
   remote_user: root
 
   tasks:
+
+  - name: update package cache
+    tags: update_packages
+    apt: update_cache=yes
+
+  - name: upgrade installed packages
+    tags: upgrade_packages
+    apt: upgrade=full
 
   - name: install base packages
     tags: base_packages
     action: apt pkg={{ item }} state=latest
     with_items:
+      - apt
       - parted
       - htop
       - atop
@@ -19,6 +36,7 @@
       - mc
       - lsof
       - git
+      - atop-nolog
 
   - name: create config dirs
     tags:
