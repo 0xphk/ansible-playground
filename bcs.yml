@@ -19,6 +19,18 @@
       - debian-bcs
       - bcs-ca-certificates
       - bcs-root-sshkeys
-      - atop
       - atop-nolog
       - etcsic
+      - apt
+      - parted
+      - htop
+      - atop
+      - atop-nolog
+      - multitail
+      - molly-guard
+      - byobu
+      - mc
+      - lsof
+      - git
+      - reptyr
+

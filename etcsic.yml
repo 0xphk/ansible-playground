@@ -33,9 +33,11 @@
 
 - hosts: 
 
-  - etcsic_legacy
+  - etcsic_bcs_legacy
+  - etcsic_agrar_legacy
+  - etcsic_delta_legacy
 
-  gather_facts: true
+  gather_facts: false
   remote_user: root
 
   vars:

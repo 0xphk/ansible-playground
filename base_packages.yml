@@ -1,11 +1,13 @@
 ---
 - hosts:
-     - etcsic_bcs
-     - etcsic_delta
-     - etcsic_agrar
-     - hetzner
+     - bcs
+     - bcs_legacy
+     - delta
+     - delta_legacy
+     - agrar
+     - agrar_legacy
      - hwservers
-
+     - hetzner
 #    - localhost
 #    - test
 
@@ -30,13 +32,14 @@
       - parted
       - htop
       - atop
+      - atop-nolog
       - multitail
       - molly-guard
       - byobu
       - mc
       - lsof
       - git
-      - atop-nolog
+      - reptyr
 
   - name: create config dirs
     tags:
