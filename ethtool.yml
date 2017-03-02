@@ -26,4 +26,6 @@
       src=resources/ethtool/offload
       dest=/etc/network/if-pre-up.d/offload
       mode=755
+      owner=root
+      group=root
     when: return.stat.isdir is defined
