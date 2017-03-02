@@ -1,15 +1,15 @@
 ---
 - hosts:
      - bcs
-     - bcs_legacy
-     - delta
-     - delta_legacy
-     - agrar
-     - agrar_legacy
+#     - bcs_legacy
+#     - delta
+#     - delta_legacy
+#     - agrar
+#     - agrar_legacy
      - hwservers
-     - hetzner
-#    - localhost
-#    - test
+#     - hetzner
+#     - localhost
+#     - test
 
   gather_facts: false
   remote_user: root
@@ -17,7 +17,7 @@
   tasks:
 
   - name: update package cache
-    tags: update_packages
+    tags: base_packages #update_packages
     apt: update_cache=yes
 
   - name: upgrade installed packages
@@ -40,6 +40,7 @@
       - lsof
       - git
       - reptyr
+      - ethtool
 
   - name: create config dirs
     tags:

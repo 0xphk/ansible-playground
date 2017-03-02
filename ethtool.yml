@@ -1,0 +1,29 @@
+---
+- hosts: 
+  - bcs_vm
+  - delta_vm
+  - agrar_vm
+
+  remote_user: root
+  gather_facts: false
+
+  tasks:
+
+  - name: install latest ethtool
+    tags: offload
+    apt:
+      update_cache=no
+      name=ethtool
+      state=latest
+
+  - stat: path=/etc/network/if-pre-up.d/
+    tags: offload
+    register: return
+
+  - name: use preconfigured offload script
+    tags: offload
+    template:
+      src=resources/ethtool/offload
+      dest=/etc/network/if-pre-up.d/offload
+      mode=755
+    when: return.stat.isdir is defined

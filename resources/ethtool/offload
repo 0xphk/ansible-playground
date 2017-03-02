@@ -1,0 +1,3 @@
+#!/bin/bash
+[ "$IFACE" == "eth0" ] && [ -x /sbin/ethtool ] && /sbin/ethtool -K eth0 tso off ufo off gso off tx off
+exit 0

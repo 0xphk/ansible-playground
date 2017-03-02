@@ -16,7 +16,7 @@
   - name: ensure latest etcsic version
     tags: etcsic_bcs
     apt: 
-      update_cache=no 
+      update_cache=yes
       name=etcsic 
       state=latest
 
