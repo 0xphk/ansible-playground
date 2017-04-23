@@ -1,4 +1,5 @@
 [localhost]
 127.0.0.1  ansible_connection=local
+
 [rpi2]
-192.168.0.5
+192.168.0.6  ansible_ssh_port=8181

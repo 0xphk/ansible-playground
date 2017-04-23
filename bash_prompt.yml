@@ -1,8 +1,10 @@
 ---
-- hosts: localhost
+- hosts: 
+  - localhost
+  - rpi2
   remote_user: root
   vars:
-    fqdn_host: toni2.test.io
+    host: 0x201
 
   tasks:
 
@@ -10,7 +12,7 @@
     lineinfile: 
       dest=~/.bashrc
       regexp="^PS1='\[\w+]"
-      line="PS1='[test] \[\033[1;31m\]\u\[\033[0;0m\]@{{ fqdn_host }}:\w\$ '"
+      line="PS1='[***] \[\033[1;31m\]\u\[\033[0;0m\]@{{ host }}:\w\$ '"
       state=present
       backrefs=yes
       # insertafter='^PS1'

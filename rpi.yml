@@ -1,79 +1,95 @@
 ---
-- hosts:
-  - all
-  #- localhost
-  #- rpi2
+- hosts: rpi2
 
   gather_facts: true
   remote_user: root
 
   tasks:
-
-- name: add bcs deb repository
-  tags: [ 'rpibase', 'bcsrepo' ]
-  template: src=resources/bcs/debian-bcs-net.list dest=/etc/apt/sources.list.d/debian-bcs-net.list
-
-- name: add repository pubkey
-  tags: [ 'rpibase', 'bcsrepo' ]
-  shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey && apt update
-
-- name: update package cache
-  tags: [ 'rpibase', 'update' ]
-  apt: update_cache=yes
-
-- name: upgrade installed packages
-  tags: [ 'rpibase', 'upgrade' ]
-  apt: upgrade=full
-
-- name: install base packages
-  tags: [ 'rpibase', 'base' ]
-  apt: name={{ item }} state=latest
-  with_items:
-    bash-cpmpletion
-    haveged
-    htop
-    atop
-    atop-nolog
-    multitail
-    molly-guard
-    byobu
-    mc
-    lsof
-    git
-    etcsic
-    reptyr
-
-- name: create config dirs
-  tags: [ 'rpibase', 'mc', 'byobu' ]
-  file: dest={{ item }} state=directory
-  with_items:
-    ~/.config/mc
-    ~/.byobu
-
-- name: use preconfigured mc config
-  tags: [ 'rpibase', 'mc']
-  copy:
-    src=resources/mc/ini
-    dest=~/.config/mc/ini
-    mode=640
-    owner=root
-    group=root
-
-- name: use preconfigured byobu config
-  tags: 
-    rpibase
-    byobu
-  unarchive: 
-    src=resources/byobu/byobu.tgz
-    dest=~/
-
-- name: install byobu shell helper
-  tags: 
-    rpibase
-    byobu
-  file:
-    src=resources/byobu/sshb
-    dest=/usr/local/bin/
-    mode=750
-    owner=root
-    group=root
+#  - name: add bcs deb repository
+#    template: 
+#      src=resources/bcs/debian-bcs-net.list 
+#      dest=/etc/apt/sources.list.d/debian-bcs-net.list
+#    tags:
+#    - rpibase
+#    - bcs
+#  - name: add bcs apt key
+#    apt_key: 
+#      url=http://debian.b-c-s.net/pubkey 
+#      state=present
+#   tags:
+#    - rpibase
+#    - bcs
+  - name: update package cache
+    apt: 
+      update_cache=yes
+    tags:
+    - rpibase
+    - update
+  - name: upgrade installed packages
+    apt: 
+      upgrade=full
+    tags:
+    - rpibase
+    - upgrade
+  - name: install base packages
+    apt: 
+      name={{ item }} 
+      state=latest
+    with_items:
+      - bash-completion
+      - haveged
+      - htop
+      - atop
+      - multitail
+      - molly-guard
+      - byobu
+      - mc
+      - lsof
+      - git
+      - reptyr
+      - ansible
+      - ansible-doc
+      - sshpass
+#      - atop-nolog
+#      - etcsic
+    tags:
+    - rpibase
+    - base
+  - name: create config dirs
+    file: 
+      dest='{{ item }}'
+      state=directory
+    with_items:
+      - ~/.config/mc
+      - ~/.byobu
+    tags: 
+    - rpibase
+    - mc
+    - byobu
+  - name: use preconfigured mc config
+    copy:
+      src=resources/mc/ini
+      dest=~/.config/mc/ini
+      mode=0640
+      owner=root
+      group=root
+    tags:
+    - rpibase
+    - mc
+  - name: use preconfigured byobu config
+    unarchive: 
+      src=resources/byobu/byobu.tgz
+      dest=/root/
+    tags: 
+    - rpibase
+    - byobu
+  - name: install byobu shell helper
+    template:
+      src=resources/byobu/sshb
+      dest=/usr/local/bin/sshb
+      mode=0750
+      owner=root
+      group=root
+    tags: 
+    - rpibase
+    - byobu
