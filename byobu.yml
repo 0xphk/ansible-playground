@@ -20,3 +20,12 @@
     unarchive: 
       src=resources/byobu/byobu.tgz
       dest=~/
+
+  - name: add sshb script
+    tags: byobu_config
+    file: 
+      src=resources/byobu/sshb
+      dest=/usr/local/bin/
+      mode=750
+      owner=root
+      group=root

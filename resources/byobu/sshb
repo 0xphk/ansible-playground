@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ssh $1 -t -- "if which byobu; then byobu; else which screen && screen -R || bash -l; fi"

@@ -66,3 +66,10 @@
     unarchive: 
       src=resources/byobu/byobu.tgz
       dest=~/
+    file:
+      src=resources/byobu/sshb
+      dst=/usr/local/bin/
+      mode=750
+      owner=root
+      group=root
+
