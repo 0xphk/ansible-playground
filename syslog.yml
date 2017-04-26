@@ -1,8 +1,9 @@
 ---
 - hosts:
-  - localhost
-  - systemd
-  gather_facts: true
+  - all
+  #- localhost
+  #- systemd
+  gather_facts: false
   remote_user: root
 
   tasks:
