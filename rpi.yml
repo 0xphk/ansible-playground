@@ -1,41 +1,41 @@
 ---
-- hosts: rpi2
-
+- hosts:
+  #- localhost
+  - rpi2
   gather_facts: true
   remote_user: root
 
   tasks:
-#  - name: add bcs deb repository
-#    template: 
-#      src=resources/bcs/debian-bcs-net.list 
-#      dest=/etc/apt/sources.list.d/debian-bcs-net.list
-#    tags:
-#    - rpibase
-#    - bcs
-#  - name: add bcs apt key
-#    apt_key: 
-#      url=http://debian.b-c-s.net/pubkey 
-#      state=present
-#   tags:
-#    - rpibase
-#    - bcs
+
+  #- name: add bcs deb repository
+  #  template:
+  #    src=resources/bcs/debian-bcs-net.list
+  #    dest=/etc/apt/sources.list.d/debian-bcs-net.list
+  #  tags:
+  #  - rpibase
+  #  - bcs
+
+  #- name: add bcs apt key
+  #  apt_key: url=http://debian.b-c-s.net/pubkey state=present
+  #  tags:
+  #  - rpibase
+  #  - bcs
+
+  #- name: workaround for missing aptitude pkg
+  #  raw: apt-get install aptitude -y
+  #  tags:
+  #  - rpibase
+
   - name: update package cache
-    apt: 
-      update_cache=yes
+    apt: update_cache=yes
     tags:
     - rpibase
     - update
-  - name: upgrade installed packages
-    apt: 
-      upgrade=full
-    tags:
-    - rpibase
-    - upgrade
+
   - name: install base packages
-    apt: 
-      name={{ item }} 
-      state=latest
+    apt: name={{ item }} state=latest
     with_items:
+      - aptitude
       - bash-completion
       - haveged
       - htop
@@ -50,22 +50,28 @@
       - ansible
       - ansible-doc
       - sshpass
-#      - atop-nolog
-#      - etcsic
+      - nload
+      #- etcsic
     tags:
     - rpibase
     - base
+
+  - name: upgrade installed packages
+    apt: upgrade=full
+    tags:
+    - rpibase
+    - upgrade
+
   - name: create config dirs
-    file: 
-      dest='{{ item }}'
-      state=directory
+    file: dest='{{ item }}' state=directory
     with_items:
       - ~/.config/mc
       - ~/.byobu
-    tags: 
+    tags:
     - rpibase
     - mc
     - byobu
+
   - name: use preconfigured mc config
     copy:
       src=resources/mc/ini
@@ -76,13 +82,13 @@
     tags:
     - rpibase
     - mc
+
   - name: use preconfigured byobu config
-    unarchive: 
-      src=resources/byobu/byobu.tgz
-      dest=/root/
-    tags: 
+    unarchive: src=resources/byobu/byobu.tgz dest=/root/
+    tags:
     - rpibase
     - byobu
+
   - name: install byobu shell helper
     template:
       src=resources/byobu/sshb
@@ -90,6 +96,28 @@
       mode=0750
       owner=root
       group=root
-    tags: 
+    tags:
     - rpibase
     - byobu
+
+  - name: disable atop cron
+    template:
+      src=resources/atop/cron_atop
+      dest=/etc/cron.d/atop
+      mode=0644
+      owner=root
+      group=root
+    tags:
+    - rpibase
+    - atopnolog
+
+  - name: disable atop logging
+    template:
+      src=resources/atop/default_atop
+      dest=/etc/default/atop
+      mode=0644
+      owner=root
+      group=root
+    tags:
+    - rpibase
+    - atopnolog

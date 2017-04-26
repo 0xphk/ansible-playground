@@ -1,0 +1,34 @@
+---
+- hosts:
+  - localhost
+  - systemd
+  gather_facts: true
+  remote_user: root
+
+  tasks:
+
+  - name: create journal dir
+    file: path=/var/log/journal state=directory mode=0755
+    tags:
+    - persistent_syslog
+
+  - name: restart journald to log to /var/log/journal
+    #systemd module only available in ansible 2.2+
+    #systemd: name=systemd-journald.service state=restarted
+    service: name=systemd-journald state=restarted
+    tags:
+    - persistent_syslog
+
+#  - stat: path=/var/log/journal
+#    tags:
+#    - syslog
+#    register: return
+#
+#  - name: make journald log persistent instead of /run
+#    command: >
+#      sed -i 's/#Storage=auto/Storage=persistent/' /etc/systemd/journald.conf
+#      systemctl restart systemd-journald.service
+#    when: return.stat.isdir is defined
+#    tags:
+#    - syslog
+
