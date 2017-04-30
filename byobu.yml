@@ -1,31 +1,40 @@
 ---
-- hosts: testservers
+- hosts: 
+  - localhost
   remote_user: root
 
   tasks:
 
-  - name: install byobu
-    tags: byobu_pkg
+  - name: install byobu on debian
+    tags:
+    - debian
     apt: 
+      update_cache=yes
       name=byobu
       state=latest 
 
   - name: create settings dir
+    tags: 
+    - config
+    - debian
+    - arch
     file:
       dest=~/.byobu 
       state=directory 
 
   - name: use preconfigured settings
-    tags: byobu_config
+    tags:
+    - config
     unarchive: 
       src=resources/byobu/byobu.tgz
       dest=~/
 
   - name: add sshb script
-    tags: byobu_config
-    file: 
+    tags:
+    - config
+    template: 
       src=resources/byobu/sshb
-      dest=/usr/local/bin/
+      dest=/usr/local/bin/sshb
       mode=750
       owner=root
       group=root

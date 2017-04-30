@@ -1,5 +1,6 @@
 ---
-- hosts: testservers
+- hosts: 
+  - localhost
   remote_user: root
 
   tasks:
