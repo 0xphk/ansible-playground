@@ -1,0 +1,84 @@
+---
+- hosts:
+  - localhost
+  gather_facts: true
+  remote_user: root
+
+  tasks:
+
+  - name: add bcs deb repository
+    tags:
+    - repo
+    template: src=resources/bcs/debian-bcs-net.list dest=/etc/apt/sources.list.d/debian-bcs-net.list
+
+  - name: add repository pubkey
+    tags:
+    - repo
+    shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey && apt update
+
+  - name: update package cache
+    tags:
+    - repo
+    - base
+    apt: update_cache=yes
+
+#  - name: upgrade installed packages
+#    tags:
+#    - upgrade
+#    apt: upgrade=full
+
+  - name: install base packages
+    tags:
+    - base
+    action: apt pkg={{ item }} state=latest
+    with_items:
+      - apt
+      - aptitude
+      - etcsic
+      - parted
+      - htop
+      - atop
+      - atop-nolog
+      - multitail
+      - molly-guard
+      - byobu
+      - mc
+      - lsof
+      - git
+      - reptyr
+      - ethtool
+
+  - name: create config dirs
+    tags:
+      - config
+    file: dest={{ item }} state=directory
+    with_items:
+      - ~/.config/mc
+      - ~/.byobu
+
+  - name: use preconfigured mc config
+    tags:
+    - config
+    copy:
+      src=resources/mc/ini
+      dest=~/.config/mc/ini
+      mode=640
+      owner=root
+      group=root
+
+  - name: use preconfigured byobu config
+    tags:
+    - config
+    unarchive:
+      src=resources/byobu/byobu.tgz
+      dest=~/
+
+  - name: add sshb scrip
+    tags:
+    - binary
+    template:
+      src=resources/byobu/sshb
+      dest=/usr/local/bin/sshb
+      mode=750
+      owner=root
+      group=root

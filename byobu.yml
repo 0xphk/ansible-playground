@@ -16,8 +16,6 @@
   - name: create settings dir
     tags: 
     - config
-    - debian
-    - arch
     file:
       dest=~/.byobu 
       state=directory 
@@ -31,7 +29,7 @@
 
   - name: add sshb script
     tags:
-    - config
+    - binary
     template: 
       src=resources/byobu/sshb
       dest=/usr/local/bin/sshb

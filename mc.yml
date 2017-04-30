@@ -1,21 +1,28 @@
 ---
-- hosts: 
+- hosts:
   - localhost
   remote_user: root
 
   tasks:
+
   - name: install mc
+    tags:
+    - install
     apt:
+      update_cache=yes
       name=mc
-      state=latest 
+      state=latest
 
   - name: create config dir
+    tags:
+    - config
     file:
       dest=~/.config/mc
       state=directory
 
   - name: use preconfigured settings
-    tags: mc_config
+    tags:
+    - config
     copy:
       src=resources/mc/ini
       dest=~/.config/mc/ini
