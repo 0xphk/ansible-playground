@@ -1,5 +1,5 @@
 ---
-- hosts: 
+- hosts:
   - localhost
   - rpi2
   remote_user: root
@@ -9,10 +9,11 @@
   tasks:
 
   - name: add custom bash prompt
-    lineinfile: 
+    lineinfile:
       dest=~/.bashrc
       regexp="^PS1='\[\w+]"
-      line="PS1='[***] \[\033[1;31m\]\u\[\033[0;0m\]@{{ host }}:\w\$ '"
+      #line="PS1='[***] \[\033[1;31m\]\u\[\033[0;0m\]@{{ host }}:\w\$ '"
+      line="PS1='\[\033[01;31m\]\u@\h\[\033[01;34m\]:\$PWD \[\033[01;31m\]#\[\033[00m\]'"
       state=present
       backrefs=yes
       # insertafter='^PS1'
