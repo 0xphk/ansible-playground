@@ -20,6 +20,12 @@
     tags:
     - persistent_syslog
 
+  - name: check log creation under /var/log/journal
+    command: ls -R /var/log/journal/
+    tags:
+    - check_syslog
+    register: persistent
+
 #  - stat: path=/var/log/journal
 #    tags:
 #    - syslog

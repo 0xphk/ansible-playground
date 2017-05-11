@@ -1,0 +1,69 @@
+---
+- hosts:
+  #- all
+  #- localhost
+  - jessie
+  gather_facts: true
+  remote_user: root
+
+  tasks:
+
+  - name: copy apt sources.list
+    template:
+      src=resources/apt/sources.list.jessie
+      dest=/etc/apt/sources.list
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "7"
+    tags:
+    - jessie
+
+  - name: copy apt preferences
+    template:
+      src=resources/apt/preferences.jessie
+      dest=/etc/apt/preferences
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "7"
+    tags:
+    - jessie
+
+  - name: copy apt sources.list
+    template:
+      src=resources/apt/sources.list.stretch
+      dest=/etc/apt/sources.list
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "8"
+    tags:
+    - stretch
+
+  - name: copy apt preferences
+    template:
+      src=resources/apt/preferences.stretch
+      dest=/etc/apt/preferences
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "8"
+    tags:
+    - stretch
+
+  - name: update pkg cache
+    apt:
+      update_cache=yes
+    tags:
+    - stretch
+    - jessie
+
