@@ -1,17 +1,17 @@
-# jessie
-deb http://ftp.de.debian.org/debian/ jessie main non-free
-deb-src http://ftp.de.debian.org/debian/ jessie main
-
-deb http://security.debian.org/ jessie/updates main non-free
-deb-src http://security.debian.org/ jessie/updates main
-
-# jessie-updates
-deb http://ftp.de.debian.org/debian/ jessie-updates main non-free
-deb-src http://ftp.de.debian.org/debian/ jessie-updates main
-
-# jessie backports
-deb http://ftp.de.debian.org/debian jessie-backports main non-free
-
 # stretch
-deb http://ftp.de.debian.org/debian/ stretch main contrib non-free
+deb http://ftp.de.debian.org/debian/ stretch main non-free
 deb-src http://ftp.de.debian.org/debian/ stretch main
+
+deb http://security.debian.org/ stretch/updates main non-free
+deb-src http://security.debian.org/ stretch/updates main
+
+# stretch-updates
+deb http://ftp.de.debian.org/debian/ stretch-updates main non-free
+deb-src http://ftp.de.debian.org/debian/ stretch-updates main
+
+# stretch backports
+deb http://ftp.de.debian.org/debian stretch-backports main non-free
+
+# sid
+deb http://ftp.de.debian.org/debian/ sid main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ sid main

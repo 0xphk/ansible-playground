@@ -126,6 +126,16 @@
     tags:
     - stretch
 
+  - name: add bcs repository pubkey
+    shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey
+    when:
+    - ansible_distribution == "Debian"
+    tags:
+    - repo
+    - wheezy
+    - jessie
+    - stretch
+
   - name: update pkg cache
     apt:
       update_cache=yes

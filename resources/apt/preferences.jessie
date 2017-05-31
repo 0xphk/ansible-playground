@@ -1,13 +1,13 @@
 Package: *
-Pin: release a=wheezy
+Pin: release a=jessie
 Pin-Priority: 500
 
 Package: *
-Pin: release a=wheezy-backports
+Pin: release a=jessie-backports
 Pin-Priority: 102
 
 Package: *
-Pin: release a=jessie
+Pin: release a=stretch
 Pin-Priority: 10
 
 Package: *

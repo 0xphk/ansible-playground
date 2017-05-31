@@ -29,6 +29,7 @@
     action: apt pkg={{ item }} state=latest
     with_items:
       - apt
+      - aptitude
       - parted
       - htop
       - atop
@@ -63,7 +64,7 @@
 
   - name: use preconfigured byobu config
     tags: byobu_config
-    unarchive: 
+    unarchive:
       src=resources/byobu/byobu.tgz
       dest=~/
     file:

@@ -11,3 +11,7 @@ deb-src http://ftp.de.debian.org/debian/ jessie-updates main
 
 # jessie backports
 deb http://ftp.de.debian.org/debian jessie-backports main non-free
+
+# stretch
+deb http://ftp.de.debian.org/debian/ stretch main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ stretch main

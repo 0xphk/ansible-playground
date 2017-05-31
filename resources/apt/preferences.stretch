@@ -1,13 +1,13 @@
 Package: *
-Pin: release a=jessie
+Pin: release a=stretch
 Pin-Priority: 500
 
 Package: *
-Pin: release a=jessie-backports
+Pin: release a=stretch-backports
 Pin-Priority: 102
 
 Package: *
-Pin: release a=stretch
+Pin: release a=sid
 Pin-Priority: 10
 
 Package: *

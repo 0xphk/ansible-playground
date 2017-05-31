@@ -1,19 +1,44 @@
 ---
 - hosts:
-  - localhost
-  - rpi2
+
+#  - localhost
+#  - rpi2
+  - samba
+
   remote_user: root
+  gather_facts: true
+
   vars:
-    host: 0x201
+    host: samba.bcs.bcs
 
   tasks:
 
-  - name: add custom bash prompt
-    lineinfile:
-      dest=~/.bashrc
-      regexp="^PS1='\[\w+]"
-      #line="PS1='[***] \[\033[1;31m\]\u\[\033[0;0m\]@{{ host }}:\w\$ '"
-      line="PS1='\[\033[01;31m\]\u@\h\[\033[01;34m\]:\$PWD \[\033[01;31m\]#\[\033[00m\]'"
-      state=present
-      backrefs=yes
-      # insertafter='^PS1'
+  - name: use preconfigured bash.bashrc
+    template:
+      src=resources/bash/bash.bashrc
+      dest=/etc/bash.bashrc
+      mode=644
+      owner=root
+      group=root
+    tags:
+    - set
+
+  - name: use preconfigured bash.bashrc
+    template:
+      src=resources/bash/bash.bashrc.dist
+      dest=/etc/bash.bashrc
+      mode=644
+      owner=root
+      group=root
+    tags:
+    - unset
+
+#  - name: add custom bash prompt
+#    lineinfile:
+#      dest=~/.bashrc
+#      regexp="^PS1='\[\w+]"
+#      #line="PS1='[***] \[\033[1;31m\]\u\[\033[0;0m\]@{{ host }}:\w\$ '"
+#      line="PS1='\[\033[01;31m\]\u@\h\[\033[01;34m\]:\$PWD \[\033[01;31m\]#\[\033[00m\]'"
+#      state=present
+#      backrefs=yes
+#      # insertafter='^PS1'

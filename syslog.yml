@@ -1,29 +1,39 @@
 ---
 - hosts:
-  - all
+  #- all
   #- localhost
   #- systemd
-  gather_facts: false
+  - samba
+  gather_facts: true
   remote_user: root
 
   tasks:
 
   - name: create journal dir
     file: path=/var/log/journal state=directory mode=0755
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "8"
     tags:
-    - persistent_syslog
+    - syslog
 
   - name: restart journald to log to /var/log/journal
-    #systemd module only available in ansible 2.2+
+    ###systemd module only available in ansible 2.2+###
     #systemd: name=systemd-journald.service state=restarted
     service: name=systemd-journald state=restarted
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "8"
     tags:
-    - persistent_syslog
+    - syslog
 
   - name: check log creation under /var/log/journal
     command: ls -R /var/log/journal/
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "8"
     tags:
-    - check_syslog
+    - syslog
     register: persistent
 
 #  - stat: path=/var/log/journal

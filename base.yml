@@ -1,37 +1,14 @@
 ---
 - hosts:
-  - localhost
+# - localhost
+  - samba
   gather_facts: true
   remote_user: root
 
   tasks:
 
-  - name: copy bcs sources.list.wheezy
-    tags:
-    - repo
-    - wheezy
-    template: src=resources/apt/debian-bcs-net.list.wheezy dest=/etc/apt/sources.list.d/debian-bcs-net.list
-    when:
-    - ansible_distribution == "Debian"
-    - ansible_distribution_major_version == "7"
-
-  - name: copy bcs sources.list.jessie
-    tags:
-    - repo
-    - jessie
-    template: src=resources/apt/debian-bcs-net.list.jessie dest=/etc/apt/sources.list.d/debian-bcs-net.list
-    when:
-    - ansible_distribution == "Debian"
-    - ansible_distribution_major_version == "8"
-
-  - name: add bcs repository pubkey
-    tags:
-    - repo
-    shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey && apt update
-
   - name: update package cache
     tags:
-    - repo
     - base
     apt: update_cache=yes
 
@@ -63,7 +40,8 @@
 
   - name: create config dirs
     tags:
-      - config
+    - base
+    - config
     file: dest={{ item }} state=directory
     with_items:
       - ~/.config/mc
@@ -71,6 +49,7 @@
 
   - name: use preconfigured mc config
     tags:
+    - base
     - config
     copy:
       src=resources/mc/ini
@@ -81,6 +60,7 @@
 
   - name: use preconfigured byobu config
     tags:
+    - base
     - config
     unarchive:
       src=resources/byobu/byobu.tgz
@@ -88,6 +68,7 @@
 
   - name: add sshb script
     tags:
+    - base
     - binary
     template:
       src=resources/byobu/sshb

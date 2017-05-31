@@ -1,0 +1,20 @@
+---
+- hosts:
+  #- all
+  #- localhost
+  #- jessie
+  - samba
+  gather_facts: true
+  remote_user: root
+
+  tasks:
+
+  - name: add bcs repository pubkey
+    shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey
+    register: repo
+
+  - debug: msg=repo verbosity=5
+
+  - name: update pkg cache
+    apt:
+      update_cache=yes
