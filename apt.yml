@@ -2,13 +2,53 @@
 - hosts:
   #- all
   #- localhost
-  - jessie
+  #- jessie
+  - samba
   gather_facts: true
   remote_user: root
 
   tasks:
 
-  - name: copy apt sources.list
+  - name: copy apt sources.list.wheezy
+    template:
+      src=resources/apt/sources.list.wheezy
+      dest=/etc/apt/sources.list
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "7"
+    tags:
+    - wheezy
+
+  - name: copy bcs sources.list.wheezy
+    template:
+      src=resources/apt/debian-bcs-net.list.wheezy
+      dest=/etc/apt/sources.list.d/debian-bcs-net.list
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "7"
+    tags:
+    - wheezy
+
+  - name: copy apt preferences.wheezy
+    template:
+      src=resources/apt/preferences.wheezy
+      dest=/etc/apt/preferences
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "7"
+    tags:
+    - wheezy
+
+  - name: copy apt sources.list.jessie
     template:
       src=resources/apt/sources.list.jessie
       dest=/etc/apt/sources.list
@@ -21,7 +61,20 @@
     tags:
     - jessie
 
-  - name: copy apt preferences
+  - name: copy bcs sources.list.jessie
+    template:
+      src=resources/apt/debian-bcs-net.list.jessie
+      dest=/etc/apt/sources.list.d/debian-bcs-net.list
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "7"
+    tags:
+    - jessie
+
+  - name: copy apt preferences.jessie
     template:
       src=resources/apt/preferences.jessie
       dest=/etc/apt/preferences
@@ -34,7 +87,7 @@
     tags:
     - jessie
 
-  - name: copy apt sources.list
+  - name: copy apt sources.list.stretch
     template:
       src=resources/apt/sources.list.stretch
       dest=/etc/apt/sources.list
@@ -47,7 +100,20 @@
     tags:
     - stretch
 
-  - name: copy apt preferences
+  - name: copy bcs sources.list.stretch
+    template:
+      src=resources/apt/debian-bcs-net.list.jessie
+      dest=/etc/apt/sources.list.d/debian-bcs-net.list
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "8"
+    tags:
+    - stretch
+
+  - name: copy apt preferences.stretch
     template:
       src=resources/apt/preferences.stretch
       dest=/etc/apt/preferences
@@ -64,6 +130,6 @@
     apt:
       update_cache=yes
     tags:
-    - stretch
+    - wheezy
     - jessie
-
+    - stretch

@@ -1,17 +1,3 @@
-# wheezy
-deb http://ftp.de.debian.org/debian/ wheezy main non-free
-deb-src http://ftp.de.debian.org/debian/ wheezy main
-
-deb http://security.debian.org/ wheezy/updates main non-free
-deb-src http://security.debian.org/ wheezy/updates main
-
-# wheezy-updates, previously known as 'volatile'
-deb http://ftp.de.debian.org/debian/ wheezy-updates main non-free
-deb-src http://ftp.de.debian.org/debian/ wheezy-updates main
-
-#wheezy backports
-deb http://ftp.de.debian.org/debian wheezy-backports main non-free
-
 # jessie
 deb http://ftp.de.debian.org/debian/ jessie main non-free
 deb-src http://ftp.de.debian.org/debian/ jessie main

@@ -1,0 +1,31 @@
+# wheezy
+deb http://ftp.de.debian.org/debian/ wheezy main non-free
+deb-src http://ftp.de.debian.org/debian/ wheezy main
+
+deb http://security.debian.org/ wheezy/updates main non-free
+deb-src http://security.debian.org/ wheezy/updates main
+
+# wheezy-updates
+deb http://ftp.de.debian.org/debian/ wheezy-updates main non-free
+deb-src http://ftp.de.debian.org/debian/ wheezy-updates main
+
+# wheezy backports
+deb http://ftp.de.debian.org/debian wheezy-backports main non-free
+
+# jessie
+#deb http://ftp.de.debian.org/debian/ jessie main non-free
+#deb-src http://ftp.de.debian.org/debian/ jessie main
+
+#deb http://security.debian.org/ jessie/updates main non-free
+#deb-src http://security.debian.org/ jessie/updates main
+
+# jessie-updates
+#deb http://ftp.de.debian.org/debian/ jessie-updates main non-free
+#deb-src http://ftp.de.debian.org/debian/ jessie-updates main
+
+# jessie backports
+#deb http://ftp.de.debian.org/debian jessie-backports main non-free
+
+# stretch
+#deb http://ftp.de.debian.org/debian/ stretch main contrib non-free
+#deb-src http://ftp.de.debian.org/debian/ stretch main
