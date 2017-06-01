@@ -1,0 +1,180 @@
+---
+- hosts:
+  - samba
+
+  gather_facts: true
+  remote_user: root
+
+  vars_files:
+  - vars/samba.yml
+
+  tasks:
+
+  - name: update package cache
+    tags:
+    - base
+    apt: update_cache=yes
+
+
+  - name: install samba packages
+    tags:
+    - provisioning
+    - samba
+    action: apt pkg="{{ item }}" state=latest
+    with_items:
+      - samba
+      - smbclient
+      - nfs-common
+      - cifs-utils
+      - winbind
+      - libnss-winbind
+      - libpam-winbind
+      - ntp
+      - krb5-doc
+      - krb5-user
+      - krb5-config
+    register: samba
+
+  - name: prepared paths
+    tags:
+    - provisioning
+    - samba
+    file: dest="{{ item }}" state=directory
+      mode=0755
+      owner=root
+      group=root
+    with_items:
+    - "{{ samba_netlogon_path }}"
+    - "{{ samba_home_path }}"
+    - "{{ samba_pdf_path }}"
+    - "{{ samba_sys_path }}"
+    - "{{ samba_sysvol_path }}"
+    - "{{ samba_profiles_path }}"
+    - "{{ samba_users_path }}"
+    - "{{ samba_clients_path }}"
+    - "{{ samba_printer_path }}"
+    - "{{ samba_printer_driver_path }}"
+    when: samba is defined
+
+  - name: update local file db
+    tags:
+    - provisioning
+    - cleanup
+    shell: updatedb
+
+  - name: register old tdb database files for deletion
+    tags:
+    - provisioning
+    - cleanup
+    shell: locate *.tdb
+    register: tdbcleanup
+    ignore_errors: yes
+
+  - name: register old ldb database files for deletion
+    tags:
+    - provisioning
+    - cleanup
+    shell: locate *.ldb
+    register: ldbcleanup
+    ignore_errors: yes
+
+  - debug: var="{{ item }}"
+    with_items:
+      - "{{ tdbcleanup.stdout_lines }}"
+      - "{{ ldbcleanup.stdout_lines }}"
+
+  - name: delete old files before provisioning
+    tags:
+    - provisioning
+    - cleanup
+    file: name="{{ item }}" state=absent
+    with_items:
+      - "{{ tdbcleanup.stdout_lines }}"
+      - "{{ ldbcleanup.stdout_lines }}"
+      - /etc/samba/smb.conf
+      - /etc/krb5.conf
+
+  - name: update local file db again
+    tags:
+    - provisioning
+    - cleanup
+    shell: updatedb
+
+  - name: hosts template
+    tags:
+    - provisioning
+    - template
+    template:
+      src=resources/smb/hosts.j2
+      dest=/etc/hosts
+      mode=0644
+      owner=root
+      group=root
+    when: samba is defined
+
+  - name: hostname template
+    tags:
+    - provisioning
+    - template
+    template:
+      src=resources/smb/hostname.j2
+      dest=/etc/hostname
+      mode=0644
+      owner=root
+      group=root
+    when: samba is defined
+
+  - name: resolv.conf template
+    tags:
+    - provisioning
+    - template
+    template:
+      src=resources/smb/resolv.conf.j2
+      dest=/etc/resolv.conf
+      mode=0644
+      owner=root
+      group=root
+    when: samba is defined
+
+  - name: network template
+    tags:
+    - provisioning
+    - template
+    template:
+      src=resources/smb/interfaces.j2
+      dest=/etc/network/interfaces
+      mode=0644
+      owner=root
+      group=root
+    when: samba is defined
+
+  - name: provisioning dc
+    tags:
+    - provisioning
+    command: samba-tool domain provision --server-role="{{ server_role }}" --dns-backend="{{ dns_backend }}" --use-rfc2307 --use-ntvfs --use-xattrs=yes --realm="{{ samba_realm }}" --domain="{{ samba_domain }}" --adminpass="{{ admin_pass }}"
+    register: provisioning
+    when: samba is defined
+
+  - name: krb5.conf template
+    tags:
+    - provisioning
+    - template
+    template:
+      src=resources/smb/krb5.conf.j2
+      dest=/etc/krb5.conf
+      mode=0644
+      owner=root
+      group=root
+    when: provisioning is defined
+
+  - name: smb.conf template
+    tags:
+    - provisioning
+    - template
+    template:
+      src=resources/smb/smb.conf.j2
+      dest=/etc/samba/smb.conf
+      mode=0644
+      owner=root
+      group=root
+    when: provisioning is defined

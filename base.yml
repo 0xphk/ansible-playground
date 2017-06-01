@@ -2,6 +2,15 @@
 - hosts:
 # - localhost
   - samba
+
+
+
+
+
+
+
+
+
   gather_facts: true
   remote_user: root
 

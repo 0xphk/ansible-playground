@@ -9,6 +9,45 @@
 
   tasks:
 
+  - name: copy bcs sources.list.wheezy
+    template:
+      src=resources/apt/debian-bcs-net.list.wheezy
+      dest=/etc/apt/sources.list.d/debian-bcs-net.list
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "7"
+    tags:
+    - wheezy
+
+  - name: copy bcs sources.list.jessie
+    template:
+      src=resources/apt/debian-bcs-net.list.jessie
+      dest=/etc/apt/sources.list.d/debian-bcs-net.list
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "8"
+    tags:
+    - jessie
+
+  - name: copy bcs sources.list.stretch
+    template:
+      src=resources/apt/debian-bcs-net.list.jessie
+      dest=/etc/apt/sources.list.d/debian-bcs-net.list
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "9"
+    tags:
+    - stretch
+
   - name: add bcs repository pubkey
     shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey
     register: repo

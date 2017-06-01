@@ -18,33 +18,10 @@ fi
 # set a fancy prompt (non-color, overwrite the one in /etc/profile)
 #PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 
-if ${use_color} ; then
-        # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
-        if type -P dircolors >/dev/null ; then
-                if [[ -f ~/.dir_colors ]] ; then
-                        eval $(dircolors -b ~/.dir_colors)
-                elif [[ -f /etc/DIR_COLORS ]] ; then
-                        eval $(dircolors -b /etc/DIR_COLORS)
-        else
-            eval $(dircolors)
-                fi
-        fi
-
-        if [[ ${EUID} == 0 ]] ; then
-                PS1="${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[01;34m\]:\$PWD \[\033[01;31m\]#\[\033[00m\] "
-        else
-                PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[01;34m\]:\$PWD \[\033[01;32m\]\$\[\033[00m\] "
-        fi
-
-        alias ls='ls --color=auto'
-        alias grep='grep --colour=auto'
+if [[ ${EUID} == 0 ]] ; then
+    PS1="${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[01;34m\]:\$PWD \[\033[01;31m\]#\[\033[00m\] "
 else
-        if [[ ${EUID} == 0 ]] ; then
-                # show root@ when we don't have colors
-                PS1='\u@\h \W \$ '
-        else
-                PS1='\u@\h \w \$ '
-        fi
+    PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[01;34m\]:\$PWD \[\033[01;32m\]\$\[\033[00m\] "
 fi
 
 # enable bash completion in interactive shells
@@ -58,18 +35,18 @@ fi
 
 # if the command-not-found package is installed, use it
 if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-not-found ]; then
-	function command_not_found_handle {
-              # check because c-n-f could've been removed in the meantime
+        function command_not_found_handle {
+                # check because c-n-f could've been removed in the meantime
                 if [ -x /usr/lib/command-not-found ]; then
-                   /usr/bin/python /usr/lib/command-not-found -- "$1"
+                   /usr/lib/command-not-found -- "$1"
                    return $?
-                elif [ -x /usr/share/command-not-found/command-not-found ];
-                   /usr/bin/python /usr/share/command-not-found/command-not-found -- "$1"
+                elif [ -x /usr/share/command-not-found/command-not-found ]; then
+                   /usr/share/command-not-found/command-not-found -- "$1"
                    return $?
-		else
+                else
                    printf "%s: command not found\n" "$1" >&2
                    return 127
-		fi
-	}
+                fi
+        }
 fi
 
