@@ -103,7 +103,7 @@
       mode=0644
       owner=root
       group=root
-    when: samba|succeeded
+    when: samba|success
 
   - name: hostname template
     tags:
@@ -127,7 +127,7 @@
       mode=0644
       owner=root
       group=root
-    when: samba|succeeded
+    when: samba|success
 
   - name: network template
     tags:
@@ -139,14 +139,14 @@
       mode=0644
       owner=root
       group=root
-    when: samba|succeeded
+    when: samba|success
 
   - name: provisioning dc
     tags:
     - provisioning
     command: samba-tool domain provision --server-role="{{ server_role }}" --dns-backend="{{ dns_backend }}" --use-rfc2307 --use-ntvfs --use-xattrs=yes --realm="{{ samba_realm }}" --domain="{{ samba_domain }}" --adminpass="{{ admin_pass }}"
     register: provisioning
-    when: samba|succeeded
+    when: samba|success
 
   - name: krb5.conf template
     tags:
@@ -158,7 +158,7 @@
       mode=0644
       owner=root
       group=root
-    when: provisioning|succeeded
+    when: provisioning|success
 
   - name: smb.conf template
     tags:
@@ -170,4 +170,4 @@
       mode=0644
       owner=root
       group=root
-    when: provisioning|succeeded
+    when: provisioning|success

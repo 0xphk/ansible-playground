@@ -1,9 +1,9 @@
 # Global parameters
 [global]
-    workgroup = "{{ samba_domain }}"
-    realm = "{{ samba_realm }}"
-    netbios name = "{{ samba_netbios_name }}"
-    dns forwarder = "{{ dns_forwarder }}"
+    workgroup = {{ samba_domain }}
+    realm = {{ samba_realm }}
+    netbios name = {{ samba_netbios_name }}
+    dns forwarder = {{ dns_forwarder }}
 
     template shell = /bin/bash
     template homedir = /home/%ACCOUNTNAME%
@@ -18,9 +18,9 @@
 
     idmap config *:backend = autorid
     idmap config *:range = 1000000-1999999
-    idmap config "{{ samba_domain }}":backend = ad
-    idmap config "{{ samba_domain }}":schema_mode = rfc2307
-    idmap config "{{ samba_domain }}":range = 10000-40000
+    idmap config {{ samba_domain }}:backend = ad
+    idmap config {{ samba_domain }}:schema_mode = rfc2307
+    idmap config {{ samba_domain }}:range = 10000-40000
 
     winbind nss info = rfc2307
     winbind trusted domains only = no
@@ -32,15 +32,15 @@
     printing = cups
     printcap name = cups
 
-    log file = "{{ samba_logfile }}"
-    log level = "{{ samba_loglevel }}"
+    log file = {{ samba_logfile }}
+    log level = {{ samba_loglevel }}
     max log size = 500
 
     kdc:service ticket lifetime = 24
     kdc:user ticket lifetime = 24
     kdc:renewal lifetime = 120
 
-    # hosts allow = "{{ samba_hosts_allow_public }}"
+    # hosts allow = {{ samba_hosts_allow_public }}
     security = user
     map to guest = bad user
     guest account = nobody
@@ -49,18 +49,18 @@
     hide unreadable = yes
 
 [netlogon]
-    path = "{{ samba_netlogon_path }}"
+    path = {{ samba_netlogon_path }}
     read only = No
-    #hosts allow = "{{ samba_hosts_allow_internal }}"
+    #hosts allow = {{ samba_hosts_allow_internal }}
 
 [sysvol]
-    path = "{{ samba_sysvol_path }}"
+    path = {{ samba_sysvol_path }}
     read only = No
-    hosts allow = "{{ samba_hosts_allow_internal }}"
+    hosts allow = {{ samba_hosts_allow_internal }}
 
 [printers]
     comment = All Printers
-    path = "{{ samba_printer_path }}"
+    path = {{ samba_printer_path }}
     browseable = no
     public = yes
     guest ok = yes
@@ -70,7 +70,7 @@
 
 [print$]
     comment = Printer Drivers
-    path = "{{ samba_printer_driver_path }}"
+    path = {{ samba_printer_driver_path }}
     browseable = yes
     guest ok = no
     writeable = yes
@@ -78,46 +78,46 @@
 
 [users]
     comment = R:%R
-    path = "{{ samba_users_path }}"
+    path = {{ samba_users_path }}
     read only = No
-    hosts allow = "{{ samba_hosts_allow_internal }}"
+    hosts allow = {{ samba_hosts_allow_internal }}
 
 [pdf]
-    path = "{{ samba_pdf_path }}"
+    path = {{ samba_pdf_path }}
     read only = No
-    hosts allow = "{{ samba_hosts_allow_internal }}"
+    hosts allow = {{ samba_hosts_allow_internal }}
 
 [sys]
-    path = "{{ samba_sys_path }}"
+    path = {{ samba_sys_path }}
     read only = No
-    hosts allow = "{{ samba_hosts_allow_public }}"
+    hosts allow = {{ samba_hosts_allow_public }}
 
 [home]
-    path = "{{ samba_home_path }}"
+    path = {{ samba_home_path }}
     read only = No
-    hosts allow = "{{ samba_hosts_allow_internal }}"
+    hosts allow = {{ samba_hosts_allow_internal }}
 
 [client]
-    path = "{{ samba_clients_path }}"
+    path = {{ samba_clients_path }}
     read only = No
-    hosts allow = "{{ samba_hosts_allow_internal }}"
+    hosts allow = {{ samba_hosts_allow_internal }}
 
 [Profiles]
-    path = "{{ samba_profiles_path }}"
+    path = {{ samba_profiles_path }}
     read only = No
 
 #[nfs]
-   #path = "{{ samba_nfs_path }}"
+   #path = {{ samba_nfs_path }}
    #comment = xxx01 sys
    #read only = No
    #writeable = yes
    #locking = no
 
 [public]
-    path = "{{ samba_public_path }}"
+    path = {{ samba_public_path }}
     read only = No
     guest ok = yes
-    #hosts allow = "{{ samba_hosts_allow_public }}"
+    #hosts allow = {{ samba_hosts_allow_public }}
     #force user = install
     #force group = dos
     #create mask = 0644
