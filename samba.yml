@@ -33,6 +33,7 @@
     - "{{ samba_clients_path }}"
     - "{{ samba_printer_path }}"
     - "{{ samba_printer_driver_path }}"
+    - "{{ samba_user_map }}"
 
   - name: install samba packages
     tags:
@@ -46,6 +47,7 @@
       - winbind
       - libnss-winbind
       - libpam-winbind
+      - libpam-krb5
       - ntp
       - krb5-doc
       - krb5-user
@@ -171,3 +173,29 @@
       owner=root
       group=root
     when: provisioning|success
+
+  - name: winbind nsswitch configuration
+    tags:
+    - provisioning
+    - template
+    template:
+      src=resources/smb/nsswitch.conf.j2
+      dest=/etc/nsswitch.conf
+      mode=0644
+      owner=root
+      group=root
+    when: provisioning|success
+
+#  - name: map root to Administrator
+#    tags:
+#    - provisioning
+#    - template
+#    template:
+#      src=resources/smb/user.map.j2
+#      dest=/usr/local/samba/etc/user.map
+#      mode=0644
+#      owner=root
+#      group=root
+#    when: provisioning|success
+
+
