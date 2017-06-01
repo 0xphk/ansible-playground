@@ -6,7 +6,7 @@
   remote_user: root
 
   vars_files:
-  - vars/samba.yml
+  - vars/sambavars.yml
 
   tasks:
 
@@ -15,29 +15,8 @@
     - base
     apt: update_cache=yes
 
-
-  - name: install samba packages
-    tags:
-    - provisioning
-    - samba
-    action: apt pkg="{{ item }}" state=latest
-    with_items:
-      - samba
-      - smbclient
-      - nfs-common
-      - cifs-utils
-      - winbind
-      - libnss-winbind
-      - libpam-winbind
-      - ntp
-      - krb5-doc
-      - krb5-user
-      - krb5-config
-    register: samba
-
   - name: prepared paths
     tags:
-    - provisioning
     - samba
     file: dest="{{ item }}" state=directory
       mode=0755
@@ -54,17 +33,32 @@
     - "{{ samba_clients_path }}"
     - "{{ samba_printer_path }}"
     - "{{ samba_printer_driver_path }}"
-    when: samba is defined
+
+  - name: install samba packages
+    tags:
+    - samba
+    action: apt pkg="{{ item }}" state=latest
+    with_items:
+      - samba
+      - smbclient
+      - nfs-common
+      - cifs-utils
+      - winbind
+      - libnss-winbind
+      - libpam-winbind
+      - ntp
+      - krb5-doc
+      - krb5-user
+      - krb5-config
+    register: samba
 
   - name: update local file db
     tags:
-    - provisioning
     - cleanup
     shell: updatedb
 
   - name: register old tdb database files for deletion
     tags:
-    - provisioning
     - cleanup
     shell: locate *.tdb
     register: tdbcleanup
@@ -72,20 +66,13 @@
 
   - name: register old ldb database files for deletion
     tags:
-    - provisioning
     - cleanup
     shell: locate *.ldb
     register: ldbcleanup
     ignore_errors: yes
 
-  - debug: var="{{ item }}"
-    with_items:
-      - "{{ tdbcleanup.stdout_lines }}"
-      - "{{ ldbcleanup.stdout_lines }}"
-
   - name: delete old files before provisioning
     tags:
-    - provisioning
     - cleanup
     file: name="{{ item }}" state=absent
     with_items:
@@ -93,10 +80,16 @@
       - "{{ ldbcleanup.stdout_lines }}"
       - /etc/samba/smb.conf
       - /etc/krb5.conf
+    register: cleanup
+
+  - debug: var="{{ item }}"
+    with_items:
+      - "{{ tdbcleanup.stdout_lines }}"
+      - "{{ ldbcleanup.stdout_lines }}"
+    when: cleanup|failed
 
   - name: update local file db again
     tags:
-    - provisioning
     - cleanup
     shell: updatedb
 
@@ -110,7 +103,7 @@
       mode=0644
       owner=root
       group=root
-    when: samba is defined
+    when: samba|succeeded
 
   - name: hostname template
     tags:
@@ -134,7 +127,7 @@
       mode=0644
       owner=root
       group=root
-    when: samba is defined
+    when: samba|succeeded
 
   - name: network template
     tags:
@@ -146,14 +139,14 @@
       mode=0644
       owner=root
       group=root
-    when: samba is defined
+    when: samba|succeeded
 
   - name: provisioning dc
     tags:
     - provisioning
     command: samba-tool domain provision --server-role="{{ server_role }}" --dns-backend="{{ dns_backend }}" --use-rfc2307 --use-ntvfs --use-xattrs=yes --realm="{{ samba_realm }}" --domain="{{ samba_domain }}" --adminpass="{{ admin_pass }}"
     register: provisioning
-    when: samba is defined
+    when: samba|succeeded
 
   - name: krb5.conf template
     tags:
@@ -165,7 +158,7 @@
       mode=0644
       owner=root
       group=root
-    when: provisioning is defined
+    when: provisioning|succeeded
 
   - name: smb.conf template
     tags:
@@ -177,4 +170,4 @@
       mode=0644
       owner=root
       group=root
-    when: provisioning is defined
+    when: provisioning|succeeded
