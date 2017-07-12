@@ -46,6 +46,8 @@
       - git
       - reptyr
       - ethtool
+      - strace
+      - ohai
 
   - name: create config dirs
     tags:

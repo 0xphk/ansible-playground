@@ -38,6 +38,7 @@
   - name: install samba packages
     tags:
     - samba
+    - provisioning
     action: apt pkg="{{ item }}" state=latest
     with_items:
       - samba
@@ -52,6 +53,8 @@
       - krb5-doc
       - krb5-user
       - krb5-config
+      - libgpgme11
+      - ldb-tools
     register: samba
 
   - name: update local file db
@@ -117,18 +120,6 @@
       mode=0644
       owner=root
       group=root
-    when: samba is defined
-
-  - name: resolv.conf template
-    tags:
-    - provisioning
-    - template
-    template:
-      src=resources/smb/resolv.conf.j2
-      dest=/etc/resolv.conf
-      mode=0644
-      owner=root
-      group=root
     when: samba|success
 
   - name: network template
@@ -146,7 +137,7 @@
   - name: provisioning dc
     tags:
     - provisioning
-    command: samba-tool domain provision --server-role="{{ server_role }}" --dns-backend="{{ dns_backend }}" --use-rfc2307 --use-ntvfs --use-xattrs=yes --realm="{{ samba_realm }}" --domain="{{ samba_domain }}" --adminpass="{{ admin_pass }}"
+    command: samba-tool domain provision --server-role="{{ server_role }}" --dns-backend="{{ dns_backend }}" --use-rfc2307 --use-xattrs=yes --realm="{{ samba_realm }}" --domain="{{ samba_domain }}" --adminpass="{{ admin_pass }}"
     register: provisioning
     when: samba|success
 
@@ -161,6 +152,18 @@
       owner=root
       group=root
     when: provisioning|success
+
+  - name: resolv.conf template
+    tags:
+    - provisioning
+    - template
+    template:
+      src=resources/smb/resolv.conf.j2
+      dest=/etc/resolv.conf
+      mode=0644
+      owner=root
+      group=root
+    when: samba|success
 
   - name: smb.conf template
     tags:

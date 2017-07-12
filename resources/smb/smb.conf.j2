@@ -13,21 +13,20 @@
 
     server role = active directory domain controller
     #acl:search = no
-    server services = rpc, nbt, wrepl, ldap, cldap, kdc, drepl, winbindd, ntp_signd, kcc, dnsupdate, dns, smb
-    dcerpc endpoint servers = epmapper, wkssvc, rpcecho, samr, netlogon, lsarpc, spoolss, drsuapi, dssetup, unixinfo, browser, eventlog6, backupkey, dnsserver, winreg, srvsvc
+    server services = +s3fs,+dnsupdate,+dns,+winbind,+kdc,+ldap
 
-    idmap config *:backend = autorid
-    idmap config *:range = 1000000-1999999
-    idmap config {{ samba_domain }}:backend = ad
-    idmap config {{ samba_domain }}:schema_mode = rfc2307
-    idmap config {{ samba_domain }}:range = 10000-40000
+    #idmap config *:backend = autorid
+    #idmap config *:range = 1000000-1999999
+    #idmap config {{ samba_domain }}:backend = ad
+    #idmap config {{ samba_domain }}:schema_mode = rfc2307
+    #idmap config {{ samba_domain }}:range = 10000-40000
 
-    winbind nss info = rfc2307
-    winbind trusted domains only = no
-    winbind use default domain = yes
-    winbind enum users  = yes
-    winbind enum groups = yes
-    winbind refresh tickets = yes
+    #winbind nss info = rfc2307
+    #winbind trusted domains only = no
+    #winbind use default domain = yes
+    #winbind enum users  = yes
+    #winbind enum groups = yes
+    #winbind refresh tickets = yes
 
     load printers = yes
     printing = cups

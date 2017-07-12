@@ -12,6 +12,6 @@ deb-src http://ftp.de.debian.org/debian/ stretch-updates main
 # stretch backports
 deb http://ftp.de.debian.org/debian stretch-backports main non-free
 
-# sid
-deb http://ftp.de.debian.org/debian/ sid main contrib non-free
-deb-src http://ftp.de.debian.org/debian/ sid main
+# buster
+deb http://ftp.de.debian.org/debian/ buster main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ buster main

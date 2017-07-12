@@ -2,7 +2,17 @@
 
 set -x
 
+##quit samba
+killall samba
+for service in winbind nmbd smbd; do service $i stop; done
+sleep 1
+
+##flush winbind cache
+net cache flush
+rm -fr /var/lib/samba/winbindd_cache.tdb /var/cache/samba/*
+
 ##check database files
+updatedb
 locate *.tdb
 locate *.ldb
 
@@ -26,3 +36,6 @@ updatedb
 ##check database files again, should be empty
 locate *.tdb
 locate *.ldb
+
+sed -i 's/10.110.40.2/10.110.0.131/g' /etc/resolv.conf
+

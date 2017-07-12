@@ -1,9 +1,9 @@
 ---
 - hosts:
-  #- all
+  - all
   #- localhost
   #- jessie
-  - samba
+  #- samba
   gather_facts: true
   remote_user: root
 
@@ -140,6 +140,7 @@
     apt:
       update_cache=yes
     tags:
+    - repo
     - wheezy
     - jessie
     - stretch
