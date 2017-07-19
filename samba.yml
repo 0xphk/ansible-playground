@@ -17,7 +17,7 @@
 
   - name: prepared paths
     tags:
-    - samba
+    - sambafolders
     file: dest="{{ item }}" state=directory
       mode=0755
       owner=root
@@ -37,17 +37,20 @@
 
   - name: install samba packages
     tags:
-    - samba
+    - sambapackages
     - provisioning
     action: apt pkg="{{ item }}" state=latest
     with_items:
+      - samba-dsdb-modules
       - samba
       - smbclient
       - nfs-common
       - cifs-utils
       - winbind
-      - libnss-winbind
-      - libpam-winbind
+      #- libnss-winbind
+      #- libpam-winbind
+      - sssd-ad
+      - sssd-tools
       - libpam-krb5
       - ntp
       - krb5-doc
@@ -56,6 +59,37 @@
       - libgpgme11
       - ldb-tools
     register: samba
+
+  - name: stop samba services after installation
+    tags:
+    - sambapackages
+    - provisioning
+    - services
+    service: name={{ item }} state=stopped
+    with_items:
+    - sssd
+    - smbd
+    - nmbd
+    - winbind
+    register: services
+
+  - name: kill services
+    tags:
+    - sambapackages
+    - provisioning
+    - services
+    command: killall samba
+#    when: services|failed
+
+  - name: remove samba non-ad services
+    tags:
+    - cleanup
+    file: dest="{{ item }}" state=absent
+    with_items:
+    - /etc/systemd/system/multi-user.target.wants/nmbd.service
+    - /etc/systemd/system/multi-user.target.wants/smbd.service
+    - /etc/systemd/system/multi-user.target.wants/winbind.service
+    - /etc/systemd/system/samba-ad-dc.service
 
   - name: update local file db
     tags:
@@ -85,6 +119,7 @@
       - "{{ ldbcleanup.stdout_lines }}"
       - /etc/samba/smb.conf
       - /etc/krb5.conf
+      - /etc/krb5.keytab
     register: cleanup
 
   - debug: var="{{ item }}"
@@ -97,6 +132,19 @@
     tags:
     - cleanup
     shell: updatedb
+
+  - name: sssd template
+    tags:
+    - sambapackages
+    - provisioning
+    - template
+    template:
+      src=resources/smb/sssd.conf
+      dest=/etc/sssd/sssd.conf
+      mode=0600
+      owner=root
+      group=root
+    when: samba|success
 
   - name: hosts template
     tags:
@@ -134,25 +182,6 @@
       group=root
     when: samba|success
 
-  - name: provisioning dc
-    tags:
-    - provisioning
-    command: samba-tool domain provision --server-role="{{ server_role }}" --dns-backend="{{ dns_backend }}" --use-rfc2307 --use-xattrs=yes --realm="{{ samba_realm }}" --domain="{{ samba_domain }}" --adminpass="{{ admin_pass }}"
-    register: provisioning
-    when: samba|success
-
-  - name: krb5.conf template
-    tags:
-    - provisioning
-    - template
-    template:
-      src=resources/smb/krb5.conf.j2
-      dest=/etc/krb5.conf
-      mode=0644
-      owner=root
-      group=root
-    when: provisioning|success
-
   - name: resolv.conf template
     tags:
     - provisioning
@@ -165,19 +194,45 @@
       group=root
     when: samba|success
 
+  - name: provisioning dc
+    tags:
+    - provisioning
+    command: samba-tool domain provision --server-role="{{ server_role }}" --dns-backend="{{ dns_backend }}" --use-rfc2307 --realm="{{ samba_realm }}" --domain="{{ samba_domain }}" --adminpass="{{ admin_pass }}"
+    register: provisioning
+    when: samba|success
+
+  - name: copy krb5.keytab
+    tags:
+    - provisioning
+    - template
+    command: ln -s /var/lib/samba/private/secrets.keytab /etc/krb5.keytab
+    when: provisioning|success
+
+  - name: krb5.conf template
+    tags:
+    - provisioning
+    - template
+    template:
+      src=resources/smb/krb5.conf
+      dest=/etc/krb5.conf
+      mode=0644
+      owner=root
+      group=root
+    when: provisioning|success
+
   - name: smb.conf template
     tags:
     - provisioning
     - template
     template:
-      src=resources/smb/smb.conf.j2
+      src=resources/smb/smb.conf
       dest=/etc/samba/smb.conf
       mode=0644
       owner=root
       group=root
     when: provisioning|success
 
-  - name: winbind nsswitch configuration
+  - name: nsswitch.conf configuration sssd
     tags:
     - provisioning
     - template
@@ -189,16 +244,31 @@
       group=root
     when: provisioning|success
 
-#  - name: map root to Administrator
-#    tags:
-#    - provisioning
-#    - template
-#    template:
-#      src=resources/smb/user.map.j2
-#      dest=/usr/local/samba/etc/user.map
-#      mode=0644
-#      owner=root
-#      group=root
-#    when: provisioning|success
+  - name: create symlink for samba-ad-dc service unit file
+    tags:
+    - provisioning
+    file:
+      src=/lib/systemd/system/samba-ad-dc.service
+      dest=/etc/systemd/system/samba-ad-dc.service
+      state=link
 
+  - name: start samba+sssd services after installation
+    tags:
+    - provisioning
+    service: name={{ item }} state=started
+    with_items:
+    - sssd
+    - samba-ad-dc
+    when: provisioning|success
 
+  - name: create dns reverse lookup zone for SAMBA_INTERNAL dns
+    tags:
+    - provisioning
+    command: samba-tool dns zonecreate {{ samba_fqdn }} {{ dns_reverse_zone }} -U administrator --password {{ admin_pass }}
+    when: provisioning|success
+
+  - name: create PTR for samba.bcs.bcs in 110.10.in-addr.arpa
+    tags:
+    - provisioning
+    command: samba-tool dns add {{ samba_fqdn }} {{ dns_reverse_zone }} {{ dns_ptr }} PTR {{ samba_fqdn }}. -U administrator --password {{ admin_pass }}
+    when: provisioning|success
