@@ -1,0 +1,105 @@
+---
+- hosts:
+  - pwan
+
+  remote_user: root
+
+  tasks:
+
+  - name: backup pwan config
+    tags:
+    - pwan
+    - backup
+    command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_pwan
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') = ''
+    when: public is not defined and router is not defined
+    register: pwan
+
+  - name: use preconfigured sshd_pwan_config
+    tags: pwan
+    template:
+      src=resources/ssh/sshd_pwan_config.j2
+      dest=/etc/ssh/sshd_config
+      mode=0640
+      owner=root
+      group=root
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') = ''
+    when: pwan is defined
+
+  - debug: msg="{{ item }}"
+    with_items:
+    - "ansible_fqdn: {{ ansible_fqdn }}"
+    - "ansible_fqdn_pwan: {{ ansible_fqdn_pwan }}"
+    - "ansible_fqdn_public: {{ ansible_fqdn_public }}"
+    - "ansible_fqdn_local: {{ ansible_fqdn_local }}"
+    when: pwan is defined
+
+- hosts:
+  - public
+
+  remote_user: root
+
+  tasks:
+
+  - name: backup public config
+    tags:
+    - public
+    - backup
+    command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_public
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') != ''
+    when: pwan is not defined and router is not defined
+    register: public
+
+  - name: use preconfigured sshd_public_config
+    tags: public
+    template:
+      src=resources/ssh/sshd_public_config.j2
+      dest=/etc/ssh/sshd_config
+      mode=0640
+      owner=root
+      group=root
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') != ''
+    when: public is defined
+
+  - debug: msg="{{ item }}"
+    with_items:
+    - "ansible_fqdn: {{ ansible_fqdn }}"
+    - "ansible_fqdn_pwan: {{ ansible_fqdn_pwan }}"
+    - "ansible_fqdn_public: {{ ansible_fqdn_public }}"
+    - "ansible_fqdn_local: {{ ansible_fqdn_local }}"
+    when: public is defined
+
+- hosts:
+  - router
+
+  remote_user: root
+
+  tasks:
+
+  - name: backup router config
+    tags:
+    - router
+    - backup
+    command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_router
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_local|d('') != ''
+    when: pwan is not defined and public is not defined
+    register: router
+
+  - name: use preconfigured sshd_router_config
+    tags: router
+    template:
+      src=resources/ssh/sshd_router_config.j2
+      dest=/etc/ssh/sshd_config
+      mode=0640
+      owner=root
+      group=root
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_local|d('') != ''
+    when: router is defined
+
+  - debug: msg="{{ item }}"
+    with_items:
+    - "ansible_fqdn: {{ ansible_fqdn }}"
+    - "ansible_fqdn_pwan: {{ ansible_fqdn_pwan }}"
+    - "ansible_fqdn_public: {{ ansible_fqdn_public }}"
+    - "ansible_fqdn_local: {{ ansible_fqdn_local }}"
+    when: router is defined

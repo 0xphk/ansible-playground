@@ -1,9 +1,14 @@
 ---
 - hosts:
-  - all
+
+  #- all
   #- localhost
   #- jessie
   #- samba
+  #- agrar02
+  - test
+  #- raspi
+
   gather_facts: true
   remote_user: root
 
@@ -21,7 +26,6 @@
     - ansible_distribution_major_version == "7"
     tags:
     - wheezy
-
   - name: copy bcs sources.list.wheezy
     template:
       src=resources/apt/debian-bcs-net.list.wheezy
@@ -34,7 +38,6 @@
     - ansible_distribution_major_version == "7"
     tags:
     - wheezy
-
   - name: copy apt preferences.wheezy
     template:
       src=resources/apt/preferences.wheezy
@@ -48,6 +51,54 @@
     tags:
     - wheezy
 
+### <raspi version1>
+  - name: copy apt preferences.raspi.wheezy
+    template:
+      src=resources/apt/preferences.raspi.wheezy
+      dest=/etc/apt/preferences
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "7"
+    - ansible_architecture == "armv6l"
+    #- ansible_processor == "ARMv6-compatible processor rev 7 (v6l)"
+    #- ansible_machine == "armv6l"
+    tags:
+    - raspi
+  - name: copy apt preferences.raspi.jessie
+    template:
+      src=resources/apt/preferences.raspi.jessie
+      dest=/etc/apt/preferences
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "8"
+    - ansible_architecture == "armv6l"
+    #- ansible_processor == "ARMv6-compatible processor rev 7 (v6l)"
+    #- ansible_machine == "armv6l"
+    tags:
+    - raspi
+  - name: copy apt preferences.raspi.stretch
+    template:
+      src=resources/apt/preferences.raspi.stretch
+      dest=/etc/apt/preferences
+      owner=root
+      group=root
+      mode=0644
+    when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_major_version == "9"
+    - ansible_architecture == "armv6l"
+    #- ansible_processor == "ARMv6-compatible processor rev 7 (v6l)"
+    #- ansible_machine == "armv6l"
+    tags:
+    - raspi
+### </raspi version1>
+
   - name: copy apt sources.list.jessie
     template:
       src=resources/apt/sources.list.jessie
@@ -60,7 +111,6 @@
     - ansible_distribution_major_version == "8"
     tags:
     - jessie
-
   - name: copy bcs sources.list.jessie
     template:
       src=resources/apt/debian-bcs-net.list.jessie
@@ -73,7 +123,6 @@
     - ansible_distribution_major_version == "8"
     tags:
     - jessie
-
   - name: copy apt preferences.jessie
     template:
       src=resources/apt/preferences.jessie
@@ -99,7 +148,6 @@
     - ansible_distribution_major_version == "9"
     tags:
     - stretch
-
   - name: copy bcs sources.list.stretch
     template:
       src=resources/apt/debian-bcs-net.list.jessie
@@ -112,7 +160,6 @@
     - ansible_distribution_major_version == "9"
     tags:
     - stretch
-
   - name: copy apt preferences.stretch
     template:
       src=resources/apt/preferences.stretch

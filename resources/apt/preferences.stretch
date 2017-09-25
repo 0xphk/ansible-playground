@@ -1,17 +1,13 @@
 Package: *
-Pin: release a=stretch
+Pin: release n=stretch
 Pin-Priority: 500
 
 Package: *
-Pin: release a=stretch-backports
+Pin: release n=stretch-backports
 Pin-Priority: 102
 
 Package: *
-Pin: release a=buster
-Pin-Priority: 10
-
-Package: *
-Pin: release a=testing
+Pin: release n=buster
 Pin-Priority: 10
 
 Package: *

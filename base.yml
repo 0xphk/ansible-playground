@@ -1,15 +1,8 @@
 ---
 - hosts:
-# - localhost
-  - samba
-
-
-
-
-
-
-
-
+#  - localhost
+#  - samba
+  - test
 
   gather_facts: true
   remote_user: root
@@ -48,6 +41,12 @@
       - ethtool
       - strace
       - ohai
+      - locate
+      - net-tools
+      - tcpdump
+      - bcs-root-bashrc
+      - bcs-root-sshkeys
+      - apt-autoproxy
 
   - name: create config dirs
     tags:
@@ -76,6 +75,14 @@
     unarchive:
       src=resources/byobu/byobu.tgz
       dest=~/
+
+  - name: use preconfigured screen config
+    tags:
+    - base
+    - config
+    unarchive:
+      src=resources/byobu/screenrc
+      dest=/etc/screenrc
 
   - name: add sshb script
     tags:

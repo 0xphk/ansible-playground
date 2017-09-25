@@ -1,15 +1,13 @@
 ---
 - hosts:
 
-#  - localhost
-#  - rpi2
-  - samba
+  #- localhost
+  #- rpi2
+  #- samba
+  - agrar02
 
-  remote_user: root
   gather_facts: true
-
-  vars:
-    host: samba.bcs.bcs
+  remote_user: root
 
   tasks:
 
@@ -23,7 +21,7 @@
     tags:
     - set
 
-  - name: use preconfigured bash.bashrc
+  - name: use default bash.bashrc
     template:
       src=resources/bash/bash.bashrc.dist
       dest=/etc/bash.bashrc

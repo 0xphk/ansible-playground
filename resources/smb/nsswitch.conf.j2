@@ -4,17 +4,18 @@
 # If you have the `glibc-doc-reference' and `info' packages installed, try:
 # `info libc "Name Service Switch"' for information about this file.
 
-passwd:         files winbind
-group:          files winbind
-shadow:         compat
+passwd:         compat sss
+group:          compat sss
+shadow:         compat sss
 gshadow:        files
 
 hosts:          files mdns4_minimal [NOTFOUND=return] dns
 networks:       files
 
 protocols:      db files
-services:       db files
+services:       db files sss
 ethers:         db files
 rpc:            db files
 
-netgroup:       nis
+netgroup:       nis sss
+sudoers:	files sss

@@ -3,7 +3,9 @@
   #- all
   #- localhost
   #- systemd
-  - samba
+  #- samba
+  - agrar02
+
   gather_facts: true
   remote_user: root
 
@@ -13,7 +15,7 @@
     file: path=/var/log/journal state=directory mode=0755
     when:
     - ansible_distribution == "Debian"
-    - ansible_distribution_major_version == "8"
+    - ansible_distribution_major_version == "8" or ansible_distribution_major_version == "9"
     tags:
     - syslog
 
@@ -23,7 +25,7 @@
     service: name=systemd-journald state=restarted
     when:
     - ansible_distribution == "Debian"
-    - ansible_distribution_major_version == "8"
+    - ansible_distribution_major_version == "8" or ansible_distribution_major_version == "9"
     tags:
     - syslog
 
@@ -31,7 +33,7 @@
     command: ls -R /var/log/journal/
     when:
     - ansible_distribution == "Debian"
-    - ansible_distribution_major_version == "8"
+    - ansible_distribution_major_version == "8" or ansible_distribution_major_version == "9"
     tags:
     - syslog
     register: persistent

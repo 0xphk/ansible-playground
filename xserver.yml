@@ -1,0 +1,24 @@
+---
+- hosts:
+  - all
+  #- localhost
+  #- test
+  gather_facts: true
+  remote_user: root
+
+  tasks:
+
+  - name: check for pkg
+    shell: 'dpkg-query -W xserver-xorg'
+    ignore_errors: True
+    register: query
+
+  - name: print output
+    debug: var='{{ ansible_nodename }}:{{ query.stdout_lines }}'
+    when: query is defined and query|d('') != ''
+    #debug: var='{{ item }}'
+    #with_items:
+    #- '{{ ansible_nodename }}:{{ query.stdout_lines }}'
+    #- '{{ ansible_nodename }}:{{ query.stderr }}'
+
+

@@ -8,9 +8,9 @@ auto lo
 iface lo inet loopback
 
 # The primary network interface
-auto {{ samba_network_interface }}
+auto eth0
 iface {{ samba_network_interface }} inet static
-  address {{ samba_ip_address }}
+  address {{ samba_member_ip_address }}
   netmask {{ samba_netmask }}
   network {{ samba_network }}
   broadcast {{ samba_broadcast }}

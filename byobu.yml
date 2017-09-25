@@ -1,5 +1,5 @@
 ---
-- hosts: 
+- hosts:
   - localhost
   remote_user: root
 
@@ -8,29 +8,36 @@
   - name: install byobu on debian
     tags:
     - debian
-    apt: 
+    apt:
       update_cache=yes
       name=byobu
-      state=latest 
+      state=latest
 
   - name: create settings dir
-    tags: 
+    tags:
     - config
     file:
-      dest=~/.byobu 
-      state=directory 
+      dest=~/.byobu
+      state=directory
 
   - name: use preconfigured settings
     tags:
     - config
-    unarchive: 
+    unarchive:
       src=resources/byobu/byobu.tgz
       dest=~/
+
+  - name: use preconfigured screen config
+    tags:
+    - config
+    unarchive:
+      src=resources/byobu/screenrc
+      dest=/etc/screenrc
 
   - name: add sshb script
     tags:
     - binary
-    template: 
+    template:
       src=resources/byobu/sshb
       dest=/usr/local/bin/sshb
       mode=750

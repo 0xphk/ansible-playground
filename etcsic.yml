@@ -1,5 +1,5 @@
 ---
-- hosts: 
+- hosts:
 
   - etcsic_bcs
 
@@ -15,9 +15,9 @@
 
   - name: ensure latest etcsic version
     tags: etcsic_bcs
-    apt: 
+    apt:
       update_cache=yes
-      name=etcsic 
+      name=etcsic
       state=latest
 
   - stat: path=/etc/.git
@@ -31,11 +31,41 @@
       dest=/etc/.git/config
     when: return.stat.isdir is defined
 
-- hosts: 
+- hosts:
 
-  - etcsic_bcs_legacy
-  - etcsic_agrar_legacy
-  - etcsic_delta_legacy
+  - etcsic_legacy_bcs
+
+  gather_facts: false
+  remote_user: root
+
+  vars:
+    git_url: git@development.bcs.bcs
+    git_repo: etcsic
+    git_origin: "{{ git_url }}:{{ git_repo }}/{{ ansible_fqdn }}/.git"
+
+  tasks:
+
+  - name: ensure latest etcsic version
+    tags: etcsic_legacy_bcs
+    apt:
+      update_cache=yes
+      name=etcsic
+      state=latest
+
+  - stat: path=/etc/.git
+    tags: etcsic_legacy
+    register: return_legacy
+
+  - name: use preconfigured git_config for legacy systems
+    tags: etcsic_legacy
+    template:
+      src=resources/etcsic/config_legacy
+      dest=/etc/.git/config
+    when: return_legacy.stat.isdir is defined
+
+- hosts:
+
+  - etcsic_legacy_agrar
 
   gather_facts: false
   remote_user: root
@@ -49,9 +79,41 @@
 
   - name: ensure latest etcsic version
     tags: etcsic_legacy
-    apt: 
-      update_cache=yes 
-      name=etcsic 
+    apt:
+      update_cache=yes
+      name=etcsic
+      state=latest
+
+  - stat: path=/etc/.git
+    tags: etcsic_legacy_agrar
+    register: return_legacy
+
+  - name: use preconfigured git_config for legacy systems
+    tags: etcsic_legacy
+    template:
+      src=resources/etcsic/config_legacy
+      dest=/etc/.git/config
+    when: return_legacy.stat.isdir is defined
+
+- hosts:
+
+  - etcsic_legacy_delta
+
+  gather_facts: false
+  remote_user: root
+
+  vars:
+    git_url: git@development.bcs.bcs
+    git_repo: etcsic
+    git_origin: "{{ git_url }}:{{ git_repo }}/{{ ansible_fqdn }}/.git"
+
+  tasks:
+
+  - name: ensure latest etcsic version
+    tags: etcsic_legacy_delta
+    apt:
+      update_cache=yes
+      name=etcsic
       state=latest
 
   - stat: path=/etc/.git
@@ -64,8 +126,8 @@
       src=resources/etcsic/config_legacy
       dest=/etc/.git/config
     when: return_legacy.stat.isdir is defined
-    
-- hosts: 
+
+- hosts:
 
   - etcsic_delta
 
@@ -81,9 +143,9 @@
 
   - name: ensure latest etcsic version
     tags: etcsic_delta
-    apt: 
-      update_cache=yes 
-      name=etcsic 
+    apt:
+      update_cache=yes
+      name=etcsic
       state=latest
 
   - stat: path=/etc/.git
@@ -97,7 +159,7 @@
       dest=/etc/.git/config
     when: return.stat.isdir is defined
 
-- hosts: 
+- hosts:
 
   - etcsic_agrar
 
@@ -113,9 +175,9 @@
 
   - name: ensure latest etcsic version
     tags: etcsic_agrar
-    apt: 
-      update_cache=yes 
-      name=etcsic 
+    apt:
+      update_cache=yes
+      name=etcsic
       state=latest
 
   - stat: path=/etc/.git
@@ -130,7 +192,7 @@
     when: return.stat.isdir is defined
 
 #  - name: add remote origin to config
-#    lineinfile: 
+#    lineinfile:
 #      dest=/etc/.git/config
 #      regexp="^logallrefudates"
 #      line="PS1='[test] \[\033[1;31m\]\u\[\033[0;0m\]@{{ fqdn_host }}:\w\$ '"
