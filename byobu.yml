@@ -1,6 +1,9 @@
 ---
 - hosts:
-  - localhost
+  #- localhost
+  - delta
+  - delta_vm
+  - delta_legacy
   remote_user: root
 
   tasks:
@@ -29,8 +32,9 @@
 
   - name: use preconfigured screen config
     tags:
+    - screen
     - config
-    unarchive:
+    copy:
       src=resources/byobu/screenrc
       dest=/etc/screenrc
 

@@ -1,9 +1,11 @@
 ---
 - hosts:
-#  - localhost
-#  - samba
-  - test
-
+   #- localhost
+   #- samba
+   #- all
+   #- bcs
+   #- bcs_vm
+   - pwan
   gather_facts: true
   remote_user: root
 
@@ -43,7 +45,10 @@
       - ohai
       - locate
       - net-tools
+      - screen
       - tcpdump
+      - munin-node
+      - bcs-munin-client
       - bcs-root-bashrc
       - bcs-root-sshkeys
       - apt-autoproxy
@@ -80,7 +85,8 @@
     tags:
     - base
     - config
-    unarchive:
+    - screen
+    copy:
       src=resources/byobu/screenrc
       dest=/etc/screenrc
 

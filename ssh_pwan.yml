@@ -70,6 +70,41 @@
     when: public is defined
 
 - hosts:
+  - proxy
+
+  remote_user: root
+
+  tasks:
+
+  - name: backup proxy config
+    tags:
+    - proxy
+    - backup
+    command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_proxy
+    when: ansible_fqdn_pwan is defined
+    when: pwan is not defined and router is not defined
+    register: proxy
+
+  - name: use preconfigured sshd_proxy_config
+    tags: proxy
+    template:
+      src=resources/ssh/sshd_proxy_config.j2
+      dest=/etc/ssh/sshd_config
+      mode=0640
+      owner=root
+      group=root
+    when: ansible_fqdn_pwan is defined
+    when: proxy is defined
+
+  - debug: msg="{{ item }}"
+    with_items:
+    - "ansible_fqdn: {{ ansible_fqdn }}"
+    - "ansible_fqdn_pwan: {{ ansible_fqdn_pwan }}"
+    - "ansible_fqdn_public: {{ ansible_fqdn_public }}"
+    - "ansible_fqdn_local: {{ ansible_fqdn_local }}"
+    when: proxy is defined
+
+- hosts:
   - router
 
   remote_user: root
