@@ -12,7 +12,6 @@
     - backup
     command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_pwan
     when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') = ''
-    when: public is not defined and router is not defined
     register: pwan
 
   - name: use preconfigured sshd_pwan_config
@@ -25,6 +24,10 @@
       group=root
     when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') = ''
     when: pwan is defined
+
+  - name: restart ssh service
+    tags: pwan
+    command: systemctl restart ssh.service
 
   - debug: msg="{{ item }}"
     with_items:
@@ -47,7 +50,6 @@
     - backup
     command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_public
     when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') != ''
-    when: pwan is not defined and router is not defined
     register: public
 
   - name: use preconfigured sshd_public_config
@@ -61,6 +63,10 @@
     when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') != ''
     when: public is defined
 
+  - name: restart ssh service
+    tags: public
+    command: systemctl restart ssh.service
+
   - debug: msg="{{ item }}"
     with_items:
     - "ansible_fqdn: {{ ansible_fqdn }}"
@@ -70,31 +76,34 @@
     when: public is defined
 
 - hosts:
-  - proxy
+  - public
 
   remote_user: root
 
   tasks:
 
-  - name: backup proxy config
+  - name: backup public config
     tags:
-    - proxy
+    - public
     - backup
-    command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_proxy
-    when: ansible_fqdn_pwan is defined
-    when: pwan is not defined and router is not defined
-    register: proxy
+    command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_public
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') != ''
+    register: public
 
-  - name: use preconfigured sshd_proxy_config
-    tags: proxy
+  - name: use preconfigured sshd_public_config
+    tags: public
     template:
-      src=resources/ssh/sshd_proxy_config.j2
+      src=resources/ssh/sshd_public_config.j2
       dest=/etc/ssh/sshd_config
       mode=0640
       owner=root
       group=root
-    when: ansible_fqdn_pwan is defined
-    when: proxy is defined
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') != ''
+    when: public is defined
+
+  - name: restart ssh service
+    tags: public
+    command: systemctl restart ssh.service
 
   - debug: msg="{{ item }}"
     with_items:
@@ -102,7 +111,45 @@
     - "ansible_fqdn_pwan: {{ ansible_fqdn_pwan }}"
     - "ansible_fqdn_public: {{ ansible_fqdn_public }}"
     - "ansible_fqdn_local: {{ ansible_fqdn_local }}"
-    when: proxy is defined
+    when: public is defined
+
+- hosts:
+  - mail
+
+  remote_user: root
+
+  tasks:
+
+  - name: backup mail config
+    tags:
+    - mail
+    - backup
+    command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_mail
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') != ''
+    register: mail
+
+  - name: use preconfigured sshd_mail_config
+    tags: mail
+    template:
+      src=resources/ssh/sshd_mail_config.j2
+      dest=/etc/ssh/sshd_config
+      mode=0640
+      owner=root
+      group=root
+    when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') != ''
+    when: mail is defined
+
+  - name: restart ssh service
+    tags: mail
+    command: systemctl restart ssh.service
+
+  - debug: msg="{{ item }}"
+    with_items:
+    - "ansible_fqdn: {{ ansible_fqdn }}"
+    - "ansible_fqdn_pwan: {{ ansible_fqdn_pwan }}"
+    - "ansible_fqdn_public: {{ ansible_fqdn_public }}"
+    - "ansible_fqdn_local: {{ ansible_fqdn_local }}"
+    when: mail is defined
 
 - hosts:
   - router
@@ -117,7 +164,6 @@
     - backup
     command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_router
     when: ansible_fqdn_pwan is defined and ansible_fqdn_local|d('') != ''
-    when: pwan is not defined and public is not defined
     register: router
 
   - name: use preconfigured sshd_router_config
@@ -130,6 +176,10 @@
       group=root
     when: ansible_fqdn_pwan is defined and ansible_fqdn_local|d('') != ''
     when: router is defined
+
+  - name: restart ssh service
+    tags: router
+    command: service ssh restart
 
   - debug: msg="{{ item }}"
     with_items:
