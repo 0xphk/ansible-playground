@@ -1,12 +1,12 @@
 ---
 - hosts:
 
-  #- all
+  - all
   #- localhost
   #- jessie
   #- samba
   #- agrar02
-  - test
+  #- test
   #- raspi
 
   gather_facts: true
@@ -28,7 +28,7 @@
     - wheezy
   - name: copy bcs sources.list.wheezy
     template:
-      src=resources/apt/debian-bcs-net.list.wheezy
+      src=resources/apt/debian-bcs-net.list
       dest=/etc/apt/sources.list.d/debian-bcs-net.list
       owner=root
       group=root
@@ -111,9 +111,10 @@
     - ansible_distribution_major_version == "8"
     tags:
     - jessie
+
   - name: copy bcs sources.list.jessie
     template:
-      src=resources/apt/debian-bcs-net.list.jessie
+      src=resources/apt/debian-bcs-net.list
       dest=/etc/apt/sources.list.d/debian-bcs-net.list
       owner=root
       group=root
@@ -123,6 +124,7 @@
     - ansible_distribution_major_version == "8"
     tags:
     - jessie
+
   - name: copy apt preferences.jessie
     template:
       src=resources/apt/preferences.jessie
@@ -148,9 +150,10 @@
     - ansible_distribution_major_version == "9"
     tags:
     - stretch
+
   - name: copy bcs sources.list.stretch
     template:
-      src=resources/apt/debian-bcs-net.list.jessie
+      src=resources/apt/debian-bcs-net.list
       dest=/etc/apt/sources.list.d/debian-bcs-net.list
       owner=root
       group=root
@@ -160,6 +163,7 @@
     - ansible_distribution_major_version == "9"
     tags:
     - stretch
+
   - name: copy apt preferences.stretch
     template:
       src=resources/apt/preferences.stretch
@@ -173,15 +177,15 @@
     tags:
     - stretch
 
-  - name: add bcs repository pubkey
-    shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey
-    when:
-    - ansible_distribution == "Debian"
-    tags:
-    - repo
-    - wheezy
-    - jessie
-    - stretch
+#  - name: add bcs repository pubkey
+#    shell: wget -O /tmp/bcs-pubkey http://debian.b-c-s.net/pubkey && apt-key add /tmp/bcs-pubkey
+#    when:
+#    - ansible_distribution == "Debian"
+#    tags:
+#    - repo
+#    - wheezy
+#    - jessie
+#    - stretch
 
   - name: update pkg cache
     apt:

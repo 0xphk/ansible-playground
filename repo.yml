@@ -1,9 +1,10 @@
 ---
 - hosts:
-  #- all
+  - all
   #- localhost
   #- jessie
-  - samba
+  #- samba
+
   gather_facts: true
   remote_user: root
 
@@ -11,7 +12,7 @@
 
   - name: copy bcs sources.list.wheezy
     template:
-      src=resources/apt/debian-bcs-net.list.wheezy
+      src=resources/apt/debian-bcs-net.list
       dest=/etc/apt/sources.list.d/debian-bcs-net.list
       owner=root
       group=root
@@ -24,7 +25,7 @@
 
   - name: copy bcs sources.list.jessie
     template:
-      src=resources/apt/debian-bcs-net.list.jessie
+      src=resources/apt/debian-bcs-net.list
       dest=/etc/apt/sources.list.d/debian-bcs-net.list
       owner=root
       group=root
@@ -37,7 +38,7 @@
 
   - name: copy bcs sources.list.stretch
     template:
-      src=resources/apt/debian-bcs-net.list.jessie
+      src=resources/apt/debian-bcs-net.list
       dest=/etc/apt/sources.list.d/debian-bcs-net.list
       owner=root
       group=root

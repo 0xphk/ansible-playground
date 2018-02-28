@@ -1,0 +1,6 @@
+SHELL=/bin/sh
+MAILTO=root@b-c-s.de
+
+# m h dom mon dow user  command
+5 4 * * *	root	test -x /usr/sbin/etcsic && /usr/sbin/etcsic
+

@@ -124,14 +124,14 @@
     tags:
     - mail
     - backup
-    command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_mail
+    command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config_backup_pwan
     when: ansible_fqdn_pwan is defined and ansible_fqdn_public|d('') != ''
     register: mail
 
-  - name: use preconfigured sshd_mail_config
+  - name: use preconfigured sshd_pwan_config
     tags: mail
     template:
-      src=resources/ssh/sshd_mail_config.j2
+      src=resources/ssh/sshd_pwan_config.j2
       dest=/etc/ssh/sshd_config
       mode=0640
       owner=root

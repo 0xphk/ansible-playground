@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Skript zum Aufzeichnen der täglichen Änderungen an /etc
+
+LANG=C
+
+DATUM=$(date +%Y-%m-%d-%H.%M.%S)
+
+GIT="git --work-tree=/etc"
+
+cd /etc
+$GIT  add --all /etc
+RET=$?
+$GIT  commit -am "auto backup $DATUM" | egrep -v "On branch master|nothing to commit"; RET=$(( $RET + ${PIPESTATUS[0]} )) #added 'a' commit option, removed path
+
+# add git push if origin is defined
+if git remote | grep origin >/dev/null;
+  then
+    git push origin master
+fi
+
+# noch ein bischen hausputz
+$GIT fsck 2>/dev/null
+$GIT gc --quiet
+
+exit $RET
